@@ -1,7 +1,7 @@
 {
   "name": "verdaccio-plugin-secfilter",
   "version": "1.1.0",
-  "description": "plugin for filtering packages with security purposes",
+  "description": "Plugin for filtering packages in verdaccio, returning only the versions that were published N days ago. It reduces risk of being infected with 0-day or 1-day attacks with package updates which are not vetted by community.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "files": [
