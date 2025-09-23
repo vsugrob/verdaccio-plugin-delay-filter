@@ -1,4 +1,4 @@
-# verdaccio-plugin-secfilter
+# verdaccio-plugin-delay-filter
 
 > plugin for filtering packages with security purposes
 
@@ -8,7 +8,7 @@
 
 - Install the plugin
 ```shell
-npm i -g verdaccio-plugin-secfilter
+npm i -g verdaccio-plugin-delay-filter
 ```
 
 - Configure options:
@@ -16,7 +16,7 @@ npm i -g verdaccio-plugin-secfilter
 ### 
 ```yaml
 filters:
-  plugin-secfilter:
+  plugin-delay-filter:
     block:
       - scope: @evil # block all packages in scope
       - package: semvver # block a malicious package
@@ -36,7 +36,7 @@ This option is deprecated and is to be used **only** if you need a fast solution
 - Add to verdaccio config (_for example you want to exclude package versions that were published after march 10, 2022_)
 ```yaml
 filters:
-  plugin-secfilter:
+  plugin-delay-filter:
     dateThreshold: '2022-03-10T23:00:00.000Z'
 ```
 

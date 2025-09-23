@@ -1,5 +1,5 @@
 {
-  "name": "verdaccio-plugin-secfilter",
+  "name": "verdaccio-plugin-delay-filter",
   "version": "1.1.0",
   "description": "Plugin for filtering packages in verdaccio, returning only the versions that were published N days ago. It reduces risk of being infected with 0-day or 1-day attacks with package updates which are not vetted by community.",
   "main": "lib/index.js",
@@ -33,12 +33,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Ansile/verdaccio-plugin-secfilter.git"
+    "url": "git+https://github.com/vsugrob/verdaccio-plugin-delay-filter.git"
   },
   "bugs": {
-    "url": "https://github.com/Ansile/verdaccio-plugin-secfilter/issues"
+    "url": "https://github.com/vsugrob/verdaccio-plugin-delay-filter/issues"
   },
-  "author": "Ansile <ansilet@yandex.ru>",
+  "author": "Ansile <ansilet@yandex.ru>, vsugrob <vsugrob@hotmail.com>",
   "license": "MIT",
   "scripts": {
     "prepack": "npm run build",

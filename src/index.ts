@@ -206,7 +206,7 @@ export default class VerdaccioMiddlewarePlugin implements IPluginStorageFilter<C
   };
   protected readonly logger: PluginOptions<unknown>['logger'];
 
-  constructor(config: CustomConfig, options: PluginOptions<CustomConfig>) {
+  public constructor(config: CustomConfig, options: PluginOptions<CustomConfig>) {
     this.config = config;
     this.logger = options.logger;
 
@@ -264,13 +264,13 @@ export default class VerdaccioMiddlewarePlugin implements IPluginStorageFilter<C
     };
 
     options.logger.debug(
-      `Loaded plugin-secfilter, ${JSON.stringify(this.parsedConfig, null, 4)}, ${Array.from(
+      `Loaded plugin-delay-filter, ${JSON.stringify(this.parsedConfig, null, 4)}, ${Array.from(
         this.parsedConfig.block.entries()
       )}`
     );
   }
 
-  filter_metadata(packageInfo: Readonly<Package>): Promise<Package> {
+  public filter_metadata(packageInfo: Readonly<Package>): Promise<Package> {
     const { dateThreshold, block } = this.parsedConfig;
 
     let newPackageInfo = packageInfo;
