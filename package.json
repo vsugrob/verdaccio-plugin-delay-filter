@@ -43,6 +43,7 @@
     "build:js": "babel src/ --out-dir lib --extensions \".ts,.tsx\"",
     "build:types": "tsc --emitDeclarationOnly",
     "test": "jest",
+    "test:debug": "jest --no-coverage --runInBand --verbose",
     "lint": "eslint \"**/*.{js,ts}\""
   }
 }
