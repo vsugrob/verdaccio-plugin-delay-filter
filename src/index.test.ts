@@ -14,7 +14,7 @@ const exampleVersion: Version = {
   version: '',
 } as Version; // Some properties are omitted on purpose
 
-const examplePackage: Package = {
+const babelTestPackage: Package = {
   'dist-tags': { latest: '3.0.0' },
   _attachments: {},
   _distfiles: {},
@@ -25,6 +25,20 @@ const examplePackage: Package = {
     '1.0.0': exampleVersion,
     '1.5.0': exampleVersion,
     '3.0.0': exampleVersion,
+  },
+};
+
+const typesNodePackage: Package = {
+  'dist-tags': { latest: '2.6.3' },
+  _attachments: {},
+  _distfiles: {},
+  _rev: '',
+  _uplinks: {},
+  name: '@types/node',
+  versions: {
+    '1.0.0': exampleVersion,
+    '2.2.0': exampleVersion,
+    '2.6.3': exampleVersion,
   },
 };
 
@@ -44,19 +58,31 @@ describe('filterBlockedVersions()', () => {
   it('filters by scope', () => {
     const block = new Map<string, ParsedBlockRule>([['@babel', 'scope']]);
 
-    expect(filterBlockedVersions(examplePackage, block, logger)).toMatchSnapshot();
+    // Should block all versions of @babel/test
+    expect(filterBlockedVersions(babelTestPackage, block, logger)).toMatchSnapshot();
+
+    // Should not block @types/node
+    expect(filterBlockedVersions(typesNodePackage, block, logger)).toMatchSnapshot();
   });
 
   it('filters by package', () => {
     const block = new Map<string, ParsedBlockRule>([['@babel/test', 'package']]);
 
-    expect(filterBlockedVersions(examplePackage, block, logger)).toMatchSnapshot();
+    // Should block all versions of @babel/test
+    expect(filterBlockedVersions(babelTestPackage, block, logger)).toMatchSnapshot();
+
+    // Should not block @types/node
+    expect(filterBlockedVersions(typesNodePackage, block, logger)).toMatchSnapshot();
   });
 
   it('filters by versions', () => {
     const block = new Map<string, ParsedBlockRule>([['@babel/test', { block: [new semver.Range('>1.0.0')] }]]);
 
-    expect(filterBlockedVersions(examplePackage, block, logger)).toMatchSnapshot();
+    // Should block all versions of @babel/test greater than 1.0.0
+    expect(filterBlockedVersions(babelTestPackage, block, logger)).toMatchSnapshot();
+
+    // Should not block @types/node
+    expect(filterBlockedVersions(typesNodePackage, block, logger)).toMatchSnapshot();
   });
 
   it('filters by multiple versions', () => {
@@ -64,6 +90,6 @@ describe('filterBlockedVersions()', () => {
       ['@babel/test', { block: [new semver.Range('>2.0.0'), new semver.Range('<1.3.0')] }],
     ]);
 
-    expect(filterBlockedVersions(examplePackage, block, logger)).toMatchSnapshot();
+    expect(filterBlockedVersions(babelTestPackage, block, logger)).toMatchSnapshot();
   });
 });

@@ -39,6 +39,42 @@ Object {
 }
 `;
 
+exports[`filterBlockedVersions() filters by package 2`] = `
+Object {
+  "_attachments": Object {},
+  "_distfiles": Object {},
+  "_rev": "",
+  "_uplinks": Object {},
+  "dist-tags": Object {
+    "latest": "2.6.3",
+  },
+  "name": "@types/node",
+  "versions": Object {
+    "1.0.0": Object {
+      "_id": "",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+    "2.2.0": Object {
+      "_id": "",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+    "2.6.3": Object {
+      "_id": "",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+  },
+}
+`;
+
 exports[`filterBlockedVersions() filters by scope 1`] = `
 Object {
   "_attachments": Object {},
@@ -51,6 +87,42 @@ Object {
   "name": "@babel/test",
   "readme": "All packages in scope @babel blocked by rule",
   "versions": Object {},
+}
+`;
+
+exports[`filterBlockedVersions() filters by scope 2`] = `
+Object {
+  "_attachments": Object {},
+  "_distfiles": Object {},
+  "_rev": "",
+  "_uplinks": Object {},
+  "dist-tags": Object {
+    "latest": "2.6.3",
+  },
+  "name": "@types/node",
+  "versions": Object {
+    "1.0.0": Object {
+      "_id": "",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+    "2.2.0": Object {
+      "_id": "",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+    "2.6.3": Object {
+      "_id": "",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+  },
 }
 `;
 
@@ -68,6 +140,42 @@ Object {
 Some versions of package are blocked by rules: >1.0.0",
   "versions": Object {
     "1.0.0": Object {
+      "_id": "",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+  },
+}
+`;
+
+exports[`filterBlockedVersions() filters by versions 2`] = `
+Object {
+  "_attachments": Object {},
+  "_distfiles": Object {},
+  "_rev": "",
+  "_uplinks": Object {},
+  "dist-tags": Object {
+    "latest": "2.6.3",
+  },
+  "name": "@types/node",
+  "versions": Object {
+    "1.0.0": Object {
+      "_id": "",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+    "2.2.0": Object {
+      "_id": "",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+    "2.6.3": Object {
       "_id": "",
       "main": "",
       "name": "",
