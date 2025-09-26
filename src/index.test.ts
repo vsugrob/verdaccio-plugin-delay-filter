@@ -1,6 +1,7 @@
-import { Package, Version, Logger } from '@verdaccio/types';
-
+import { Logger, Package, Version } from '@verdaccio/types';
 import * as semver from 'semver';
+import { describe, expect, test } from '@jest/globals';
+
 import { ParsedBlockRule } from '../types';
 
 import { filterBlockedVersions } from './index';
@@ -11,7 +12,7 @@ const exampleVersion: Version = {
   name: '',
   readme: '',
   version: '',
-} as any;
+} as Version; // Some properties are omitted on purpose
 
 const examplePackage: Package = {
   'dist-tags': { latest: '3.0.0' },
@@ -26,8 +27,8 @@ const examplePackage: Package = {
   },
 };
 
-
-const noop = () => {};
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+const noop = (): void => {};
 const logger: Logger = {
   child: noop,
   debug: noop,
