@@ -84,14 +84,12 @@ function getPackageClone(packageInfo: Readonly<Package>): Package {
  * @param packageInfo
  * @param dateThreshold
  */
-function filterVersionsByPublishDate(packageInfo: Readonly<Package>, dateThreshold: Date): Promise<Package> {
+function filterVersionsByPublishDate(packageInfo: Package, dateThreshold: Date): Promise<Package> {
   const { versions, time, name } = packageInfo;
 
   if (!time) {
     throw new TypeError(`Time of publication was not provided for package ${name}`);
   }
-
-  const newPackage = getPackageClone(packageInfo);
 
   const clearVersions: string[] = [];
 
@@ -110,10 +108,10 @@ function filterVersionsByPublishDate(packageInfo: Readonly<Package>, dateThresho
 
   // delete version from versions
   clearVersions.forEach((version) => {
-    delete newPackage.versions[version];
+    delete packageInfo.versions[version];
   });
 
-  return Promise.resolve(newPackage);
+  return Promise.resolve(packageInfo);
 }
 
 function isScopeRule(rule: PackageBlockRule): rule is { scope: string } {
@@ -139,11 +137,7 @@ function isPackageAndVersionRule(
  * @param block
  * @param logger
  */
-function filterBlockedVersions(
-  packageInfo: Readonly<Package>,
-  block: Map<string, ParsedBlockRule>,
-  logger: Logger
-): Package {
+function filterBlockedVersions(packageInfo: Package, block: Map<string, ParsedBlockRule>, logger: Logger): Package {
   const { scope } = splitName(packageInfo.name);
 
   if (scope && block.get(scope) === 'scope') {
@@ -181,15 +175,13 @@ function filterBlockedVersions(
     blockRule.strategy = 'block';
   }
 
-  const newPackageInfo = getPackageClone(packageInfo);
-
   // Add debug info for devs
-  newPackageInfo.readme =
-    (newPackageInfo.readme || '') +
+  packageInfo.readme =
+    (packageInfo.readme || '') +
     `\nSome versions of package are blocked by rules: ${blockedVersionRanges.map((range) => range.raw)}`;
 
   if (blockRule.strategy === 'block') {
-    Object.keys(newPackageInfo.versions).forEach((version) => {
+    Object.keys(packageInfo.versions).forEach((version) => {
       blockedVersionRanges.forEach((versionRange) => {
         if (
           satisfies(version, versionRange, {
@@ -197,16 +189,16 @@ function filterBlockedVersions(
             loose: true,
           })
         ) {
-          delete newPackageInfo.versions[version];
+          delete packageInfo.versions[version];
         }
       });
     });
 
-    return newPackageInfo;
+    return packageInfo;
   }
 
   // We assume that the order of versions is already sorted
-  const nonBlockedVersions = { ...newPackageInfo.versions };
+  const nonBlockedVersions = { ...packageInfo.versions };
   const newVersionsMapping: Record<string, string | null> = {};
 
   blockedVersionRanges.forEach((versionRange) => {
@@ -245,23 +237,23 @@ function filterBlockedVersions(
 
   removedVersions.forEach(([version]) => {
     logger.debug(`No version to replace ${version}`);
-    delete newPackageInfo.versions[version];
+    delete packageInfo.versions[version];
     return;
   });
 
   replacedVersions.forEach(([version, replaceVersion]) => {
-    newPackageInfo.versions[version] = {
-      ...newPackageInfo.versions[replaceVersion],
+    packageInfo.versions[version] = {
+      ...packageInfo.versions[replaceVersion],
       version,
     };
   });
 
-  newPackageInfo.readme += `\nSome versions of package are fully blocked: ${removedVersions.map((a) => a[0])}`;
-  newPackageInfo.readme += `\nSome versions of package are replaced by other: ${removedVersions.map(
+  packageInfo.readme += `\nSome versions of package are fully blocked: ${removedVersions.map((a) => a[0])}`;
+  packageInfo.readme += `\nSome versions of package are replaced by other: ${removedVersions.map(
     (a) => `${a[0]} => ${a[1]}`
   )}`;
 
-  return newPackageInfo;
+  return packageInfo;
 }
 
 export default class VerdaccioMiddlewarePlugin implements IPluginStorageFilter<CustomConfig> {
@@ -355,7 +347,7 @@ export default class VerdaccioMiddlewarePlugin implements IPluginStorageFilter<C
   public async filter_metadata(packageInfo: Readonly<Package>): Promise<Package> {
     const { dateThreshold, block } = this.parsedConfig;
 
-    let newPackage = packageInfo;
+    let newPackage = getPackageClone(packageInfo);
     if (block.size > 0) {
       newPackage = filterBlockedVersions(newPackage, block, this.logger);
     }
