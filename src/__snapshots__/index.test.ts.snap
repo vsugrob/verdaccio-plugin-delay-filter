@@ -6,7 +6,9 @@ Object {
   "_distfiles": Object {},
   "_rev": "",
   "_uplinks": Object {},
-  "dist-tags": Object {},
+  "dist-tags": Object {
+    "latest": "1.5.0",
+  },
   "name": "@babel/test",
   "time": Object {
     "1.0.0": "2020-01-01T00:00:00.000Z",
@@ -38,7 +40,9 @@ Object {
   "_distfiles": Object {},
   "_rev": "",
   "_uplinks": Object {},
-  "dist-tags": Object {},
+  "dist-tags": Object {
+    "latest": "2.2.0",
+  },
   "name": "@types/node",
   "time": Object {
     "1.0.0": "2010-01-01T00:00:00.000Z",
@@ -70,7 +74,9 @@ Object {
   "_distfiles": Object {},
   "_rev": "",
   "_uplinks": Object {},
-  "dist-tags": Object {},
+  "dist-tags": Object {
+    "latest": "1.5.0",
+  },
   "name": "@babel/test",
   "readme": "
 Some versions of package are blocked by rules: >2.0.0,<1.3.0",
@@ -256,7 +262,9 @@ Object {
   "_distfiles": Object {},
   "_rev": "",
   "_uplinks": Object {},
-  "dist-tags": Object {},
+  "dist-tags": Object {
+    "latest": "1.0.0",
+  },
   "name": "@babel/test",
   "readme": "
 Some versions of package are blocked by rules: >1.0.0",

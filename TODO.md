@@ -5,7 +5,7 @@
 - ✅ Rewrite all tests to test VerdaccioMiddlewarePlugin instead of filterBlockedVersions().
   - ✅ Remove export for filterBlockedVersions().
 - ✅ Fix dist-tags/latest still contains version that was filtered out.
-- 🔴 Make dist-tags/latest set to latest version after filtering.
+- ✅ Make dist-tags/latest set to latest version after filtering.
 - 🔴 Fix time property still contains entries for versions that were cut.
 - 🔴 Update README.md:
   - ✅ Split config into several task-based sections.

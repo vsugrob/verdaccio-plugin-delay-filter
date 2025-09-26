@@ -1,6 +1,6 @@
 /* eslint-disable new-cap */
 import { IPluginStorageFilter, Package, PluginOptions, Logger } from '@verdaccio/types';
-import { Range, satisfies } from 'semver';
+import semver, { Range, satisfies } from 'semver';
 
 import { BlockStrategy, CustomConfig, PackageBlockRule, ParsedBlockRule } from '../types/index';
 
@@ -28,11 +28,27 @@ function splitName(name: string): { name: string; scope?: string } {
  * todo: maybe verdaccio does this by itself, check later
  */
 function cleanupTags(packageInfo: Package): void {
-  Object.entries(packageInfo['dist-tags']).forEach(([tag, tagVersion]) => {
+  const distTags = packageInfo['dist-tags'];
+  Object.entries(distTags).forEach(([tag, tagVersion]) => {
     if (!packageInfo.versions[tagVersion]) {
-      delete packageInfo['dist-tags'][tag];
+      delete distTags[tag];
     }
   });
+}
+
+function setupLatestTag(packageInfo: Package): void {
+  const versions = Object.keys(packageInfo.versions);
+  if (versions.length === 0) {
+    return;
+  }
+
+  const validVersions = versions.filter((v) => semver.valid(v));
+  if (validVersions.length === 0) {
+    return;
+  }
+
+  const sortedVersions = validVersions.sort(semver.rcompare);
+  packageInfo['dist-tags'].latest = sortedVersions[0];
 }
 
 function getPackageClone(packageInfo: Readonly<Package>): Package {
@@ -333,6 +349,7 @@ export default class VerdaccioMiddlewarePlugin implements IPluginStorageFilter<C
     }
 
     cleanupTags(newPackage);
+    setupLatestTag(newPackage);
     return Promise.resolve(newPackage);
   }
 }
