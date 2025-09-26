@@ -147,6 +147,10 @@ export function filterBlockedVersions(
     return packageInfo;
   }
 
+  if (!blockRule.strategy) {
+    blockRule.strategy = 'block';
+  }
+
   const newPackageInfo = getPackageClone(packageInfo);
 
   // Add debug info for devs
