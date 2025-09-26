@@ -63,7 +63,7 @@ function filterVersionsByPublishDate(packageInfo: Readonly<Package>, dateThresho
 
   const clearVersions: string[] = [];
 
-  Object.keys(versions).forEach(version => {
+  Object.keys(versions).forEach((version) => {
     const publishTime = time[version];
 
     if (!publishTime) {
@@ -77,7 +77,7 @@ function filterVersionsByPublishDate(packageInfo: Readonly<Package>, dateThresho
   });
 
   // delete version from versions
-  clearVersions.forEach(version => {
+  clearVersions.forEach((version) => {
     delete newPackage.versions[version];
   });
 
@@ -117,7 +117,11 @@ export function filterBlockedVersions(
   const { scope } = splitName(packageInfo.name);
 
   if (scope && block.get(scope) === 'scope') {
-    return { ...packageInfo, versions: {}, readme: `All packages in scope ${scope} blocked by rule` };
+    return {
+      ...packageInfo,
+      versions: {},
+      readme: `All packages in scope ${scope} blocked by rule`,
+    };
   }
 
   const blockRule = block.get(packageInfo.name);
@@ -127,7 +131,11 @@ export function filterBlockedVersions(
   }
 
   if (blockRule === 'package') {
-    return { ...packageInfo, versions: {}, readme: `All package versions blocked by rule` };
+    return {
+      ...packageInfo,
+      versions: {},
+      readme: `All package versions blocked by rule`,
+    };
   }
 
   if (blockRule === 'scope') {
@@ -141,12 +149,17 @@ export function filterBlockedVersions(
   // Add debug info for devs
   newPackageInfo.readme =
     (newPackageInfo.readme || '') +
-    `\nSome versions of package are blocked by rules: ${blockedVersionRanges.map(range => range.raw)}`;
+    `\nSome versions of package are blocked by rules: ${blockedVersionRanges.map((range) => range.raw)}`;
 
   if (blockRule.strategy === 'block') {
-    Object.keys(newPackageInfo.versions).forEach(version => {
-      blockedVersionRanges.forEach(versionRange => {
-        if (satisfies(version, versionRange, { includePrerelease: true, loose: true })) {
+    Object.keys(newPackageInfo.versions).forEach((version) => {
+      blockedVersionRanges.forEach((versionRange) => {
+        if (
+          satisfies(version, versionRange, {
+            includePrerelease: true,
+            loose: true,
+          })
+        ) {
           delete newPackageInfo.versions[version];
         }
       });
@@ -159,14 +172,19 @@ export function filterBlockedVersions(
   const nonBlockedVersions = { ...newPackageInfo.versions };
   const newVersionsMapping: Record<string, string | null> = {};
 
-  blockedVersionRanges.forEach(versionRange => {
+  blockedVersionRanges.forEach((versionRange) => {
     const allVersions = Object.keys(nonBlockedVersions);
 
     let lastNonBlockedVersion: string | null = null;
     let firstNonBlockedVersion: string | null = null;
 
     allVersions.forEach((version, index) => {
-      if (satisfies(version, versionRange, { includePrerelease: true, loose: true })) {
+      if (
+        satisfies(version, versionRange, {
+          includePrerelease: true,
+          loose: true,
+        })
+      ) {
         delete nonBlockedVersions[version];
         newVersionsMapping[version] = lastNonBlockedVersion;
       } else {
@@ -179,8 +197,14 @@ export function filterBlockedVersions(
   logger.debug(`Filtering package ${packageInfo.name}, replacing versions`);
   logger.debug(`${JSON.stringify(newVersionsMapping)}`);
 
-  const removedVersions = Object.entries(newVersionsMapping).filter(([_, replace]) => replace === null) as [string, null][];
-  const replacedVersions = Object.entries(newVersionsMapping).filter(([_, replace]) => replace !== null) as [string, string][];
+  const removedVersions = Object.entries(newVersionsMapping).filter(([_, replace]) => replace === null) as [
+    string,
+    null
+  ][];
+  const replacedVersions = Object.entries(newVersionsMapping).filter(([_, replace]) => replace !== null) as [
+    string,
+    string
+  ][];
 
   removedVersions.forEach(([version]) => {
     logger.debug(`No version to replace ${version}`);
@@ -189,11 +213,16 @@ export function filterBlockedVersions(
   });
 
   replacedVersions.forEach(([version, replaceVersion]) => {
-    newPackageInfo.versions[version] = { ...newPackageInfo.versions[replaceVersion], version };
+    newPackageInfo.versions[version] = {
+      ...newPackageInfo.versions[replaceVersion],
+      version,
+    };
   });
 
-  newPackageInfo.readme += `\nSome versions of package are fully blocked: ${removedVersions.map(a => a[0])}`;
-  newPackageInfo.readme += `\nSome versions of package are replaced by other: ${removedVersions.map(a => `${a[0]} => ${a[1]}`)}`;
+  newPackageInfo.readme += `\nSome versions of package are fully blocked: ${removedVersions.map((a) => a[0])}`;
+  newPackageInfo.readme += `\nSome versions of package are replaced by other: ${removedVersions.map(
+    (a) => `${a[0]} => ${a[1]}`
+  )}`;
 
   return newPackageInfo;
 }
@@ -236,7 +265,10 @@ export default class VerdaccioMiddlewarePlugin implements IPluginStorageFilter<C
         try {
           const range = new Range(value.versions);
 
-          map.set(value.package, { block: [...previousConfig.block, range], strategy: value.strategy ?? 'block' });
+          map.set(value.package, {
+            block: [...previousConfig.block, range],
+            strategy: value.strategy ?? 'block',
+          });
         } catch (e) {
           options.logger.error('Error parsing rule failed:');
           options.logger.error(e);
