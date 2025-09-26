@@ -40,7 +40,7 @@
     "prepack": "npm run build",
     "release": "standard-version -a",
     "build": "npm run build:types && npm run build:js",
-    "build:js": "babel src/ --out-dir lib --extensions \".ts,.tsx\"",
+    "build:js": "babel src/ --out-dir lib --extensions \".ts,.tsx\" --ignore \"**/*.test.ts\"",
     "build:types": "tsc --emitDeclarationOnly",
     "test": "jest",
     "test:debug": "jest --no-coverage --runInBand --verbose",
