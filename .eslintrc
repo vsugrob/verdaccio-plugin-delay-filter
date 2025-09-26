@@ -1,3 +1,12 @@
 {
-  "extends": ["@verdaccio"]
+  "extends": ["@verdaccio"],
+  "rules": {
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }
+    ]
+  }
 }

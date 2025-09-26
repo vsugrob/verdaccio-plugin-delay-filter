@@ -8,7 +8,7 @@ import { BlockStrategy, CustomConfig, PackageBlockRule, ParsedBlockRule } from '
  * Split a package name into name itself and scope
  * @param name
  */
-function splitName(name: string) {
+function splitName(name: string): { name: string; scope?: string } {
   const parts = name.split('/');
 
   if (parts.length > 1) {
@@ -35,7 +35,7 @@ function cleanupTags(packageInfo: Package): void {
   });
 }
 
-function getPackageClone(packageInfo: Readonly<Package>) {
+function getPackageClone(packageInfo: Readonly<Package>): Package {
   return {
     ...packageInfo,
     versions: {
@@ -52,7 +52,7 @@ function getPackageClone(packageInfo: Readonly<Package>) {
  * @param packageInfo
  * @param dateThreshold
  */
-function filterVersionsByPublishDate(packageInfo: Readonly<Package>, dateThreshold: Date) {
+function filterVersionsByPublishDate(packageInfo: Readonly<Package>, dateThreshold: Date): Promise<Package> {
   const { versions, time, name } = packageInfo;
 
   if (!time) {
@@ -168,7 +168,7 @@ export function filterBlockedVersions(
     return newPackageInfo;
   }
 
-  // Мы предполагаем что порядок версий уже отсортирован
+  // We assume that the order of versions is already sorted
   const nonBlockedVersions = { ...newPackageInfo.versions };
   const newVersionsMapping: Record<string, string | null> = {};
 
@@ -178,7 +178,7 @@ export function filterBlockedVersions(
     let lastNonBlockedVersion: string | null = null;
     let firstNonBlockedVersion: string | null = null;
 
-    allVersions.forEach((version, index) => {
+    allVersions.forEach((version) => {
       if (
         satisfies(version, versionRange, {
           includePrerelease: true,
