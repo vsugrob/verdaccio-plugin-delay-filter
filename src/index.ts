@@ -109,7 +109,7 @@ function isPackageAndVersionRule(
  * @param block
  * @param logger
  */
-export function filterBlockedVersions(
+function filterBlockedVersions(
   packageInfo: Readonly<Package>,
   block: Map<string, ParsedBlockRule>,
   logger: Logger

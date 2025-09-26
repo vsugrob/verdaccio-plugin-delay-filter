@@ -64,7 +64,7 @@ Object {
 }
 `;
 
-exports[`filterBlockedVersions() filters by multiple versions 1`] = `
+exports[`VerdaccioMiddlewarePlugin filters by multiple versions 1`] = `
 Object {
   "_attachments": Object {},
   "_distfiles": Object {},
@@ -93,7 +93,48 @@ Some versions of package are blocked by rules: >2.0.0,<1.3.0",
 }
 `;
 
-exports[`filterBlockedVersions() filters by package 1`] = `
+exports[`VerdaccioMiddlewarePlugin filters by multiple versions 2`] = `
+Object {
+  "_attachments": Object {},
+  "_distfiles": Object {},
+  "_rev": "",
+  "_uplinks": Object {},
+  "dist-tags": Object {
+    "latest": "2.6.3",
+  },
+  "name": "@types/node",
+  "time": Object {
+    "1.0.0": "2010-01-01T00:00:00.000Z",
+    "2.2.0": "2015-01-01T00:00:00.000Z",
+    "2.6.3": "2025-01-01T00:00:00.000Z",
+  },
+  "versions": Object {
+    "1.0.0": Object {
+      "_id": "",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+    "2.2.0": Object {
+      "_id": "",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+    "2.6.3": Object {
+      "_id": "",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+  },
+}
+`;
+
+exports[`VerdaccioMiddlewarePlugin filters by package 1`] = `
 Object {
   "_attachments": Object {},
   "_distfiles": Object {},
@@ -113,7 +154,7 @@ Object {
 }
 `;
 
-exports[`filterBlockedVersions() filters by package 2`] = `
+exports[`VerdaccioMiddlewarePlugin filters by package 2`] = `
 Object {
   "_attachments": Object {},
   "_distfiles": Object {},
@@ -154,7 +195,7 @@ Object {
 }
 `;
 
-exports[`filterBlockedVersions() filters by scope 1`] = `
+exports[`VerdaccioMiddlewarePlugin filters by scope 1`] = `
 Object {
   "_attachments": Object {},
   "_distfiles": Object {},
@@ -174,7 +215,7 @@ Object {
 }
 `;
 
-exports[`filterBlockedVersions() filters by scope 2`] = `
+exports[`VerdaccioMiddlewarePlugin filters by scope 2`] = `
 Object {
   "_attachments": Object {},
   "_distfiles": Object {},
@@ -215,7 +256,7 @@ Object {
 }
 `;
 
-exports[`filterBlockedVersions() filters by versions 1`] = `
+exports[`VerdaccioMiddlewarePlugin filters by versions 1`] = `
 Object {
   "_attachments": Object {},
   "_distfiles": Object {},
@@ -244,7 +285,7 @@ Some versions of package are blocked by rules: >1.0.0",
 }
 `;
 
-exports[`filterBlockedVersions() filters by versions 2`] = `
+exports[`VerdaccioMiddlewarePlugin filters by versions 2`] = `
 Object {
   "_attachments": Object {},
   "_distfiles": Object {},
