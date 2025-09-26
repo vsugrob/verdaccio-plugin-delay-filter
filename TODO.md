@@ -1,5 +1,5 @@
 - 🔴 Add 'minAgeDays' configuration option.
-  - ✅ Implement filtering base on age.
+  - ✅ Implement filtering based on age.
   - ✅ Add unit test for this option.
   - 🔴 Describe in README.md why this option is helpful in the light of the latest supply chain attack (Shai Hulud).
 - ✅ Rewrite all tests to test VerdaccioMiddlewarePlugin instead of filterBlockedVersions().
@@ -13,4 +13,5 @@
   - 🔴 Describe installation more thoroughly. It's not enough to just run npm install -g.
   - 🔴 Mention where to configure "filters:" (config.yaml verdaccio).
   - ✅ Remove deprecation from dateThreshold parameter. It's not that useless actually.
+- 🔴 Do not compile index.test.ts into lib/index.test.js. It should not end up in distrubution files.
 - 🔴 Fix vulnerabilities revealed by npm audit: 39 vulnerabilities (7 low, 18 moderate, 14 high).
