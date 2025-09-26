@@ -1,6 +1,6 @@
+import { describe, expect, it } from '@jest/globals';
 import { Logger, Package, Version } from '@verdaccio/types';
 import * as semver from 'semver';
-import { describe, expect, test } from '@jest/globals';
 
 import { ParsedBlockRule } from '../types';
 
@@ -40,26 +40,26 @@ const logger: Logger = {
   trace: noop,
 };
 
-describe('filters blocked packages', () => {
-  test('filters when rules are for scope', () => {
+describe('filterBlockedVersions()', () => {
+  it('filters by scope', () => {
     const block = new Map<string, ParsedBlockRule>([['@babel', 'scope']]);
 
     expect(filterBlockedVersions(examplePackage, block, logger)).toMatchSnapshot();
   });
 
-  test('filters when rules are for package', () => {
+  it('filters by package', () => {
     const block = new Map<string, ParsedBlockRule>([['@babel/test', 'package']]);
 
     expect(filterBlockedVersions(examplePackage, block, logger)).toMatchSnapshot();
   });
 
-  test('filters when rules are for versions', () => {
+  it('filters by versions', () => {
     const block = new Map<string, ParsedBlockRule>([['@babel/test', { block: [new semver.Range('>1.0.0')] }]]);
 
     expect(filterBlockedVersions(examplePackage, block, logger)).toMatchSnapshot();
   });
 
-  test('filters when multiple rules are for versions', () => {
+  it('filters by multiple versions', () => {
     const block = new Map<string, ParsedBlockRule>([
       ['@babel/test', { block: [new semver.Range('>2.0.0'), new semver.Range('<1.3.0')] }],
     ]);

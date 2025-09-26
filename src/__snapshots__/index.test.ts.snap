@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`filters blocked packages filters when multiple rules are for versions 1`] = `
+exports[`filterBlockedVersions() filters by multiple versions 1`] = `
 Object {
   "_attachments": Object {},
   "_distfiles": Object {},
@@ -24,7 +24,7 @@ Some versions of package are blocked by rules: >2.0.0,<1.3.0",
 }
 `;
 
-exports[`filters blocked packages filters when rules are for package 1`] = `
+exports[`filterBlockedVersions() filters by package 1`] = `
 Object {
   "_attachments": Object {},
   "_distfiles": Object {},
@@ -39,7 +39,7 @@ Object {
 }
 `;
 
-exports[`filters blocked packages filters when rules are for scope 1`] = `
+exports[`filterBlockedVersions() filters by scope 1`] = `
 Object {
   "_attachments": Object {},
   "_distfiles": Object {},
@@ -54,7 +54,7 @@ Object {
 }
 `;
 
-exports[`filters blocked packages filters when rules are for versions 1`] = `
+exports[`filterBlockedVersions() filters by versions 1`] = `
 Object {
   "_attachments": Object {},
   "_distfiles": Object {},
