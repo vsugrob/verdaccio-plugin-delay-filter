@@ -1,7 +1,7 @@
 import { describe, expect, it } from '@jest/globals';
 import { Logger, Package, Version } from '@verdaccio/types';
 
-import { CustomConfig } from '../types';
+import { CustomConfig } from './types';
 
 import VerdaccioMiddlewarePlugin from './index';
 

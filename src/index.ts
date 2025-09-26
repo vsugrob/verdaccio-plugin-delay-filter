@@ -2,7 +2,7 @@
 import { IPluginStorageFilter, Package, PluginOptions, Logger } from '@verdaccio/types';
 import semver, { Range, satisfies } from 'semver';
 
-import { BlockStrategy, CustomConfig, PackageBlockRule, ParsedBlockRule } from '../types/index';
+import { BlockStrategy, CustomConfig, PackageBlockRule, ParsedBlockRule } from './types';
 
 /**
  * Split a package name into name itself and scope
