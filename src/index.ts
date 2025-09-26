@@ -81,8 +81,6 @@ function filterVersionsByPublishDate(packageInfo: Readonly<Package>, dateThresho
     delete newPackage.versions[version];
   });
 
-  cleanupTags(newPackage);
-
   return Promise.resolve(newPackage);
 }
 
@@ -322,18 +320,19 @@ export default class VerdaccioMiddlewarePlugin implements IPluginStorageFilter<C
     );
   }
 
-  public filter_metadata(packageInfo: Readonly<Package>): Promise<Package> {
+  public async filter_metadata(packageInfo: Readonly<Package>): Promise<Package> {
     const { dateThreshold, block } = this.parsedConfig;
 
-    let newPackageInfo = packageInfo;
+    let newPackage = packageInfo;
     if (block.size > 0) {
-      newPackageInfo = filterBlockedVersions(packageInfo, block, this.logger);
+      newPackage = filterBlockedVersions(packageInfo, block, this.logger);
     }
 
     if (dateThreshold) {
-      return filterVersionsByPublishDate(newPackageInfo, dateThreshold);
+      newPackage = await filterVersionsByPublishDate(newPackage, dateThreshold);
     }
 
-    return Promise.resolve(newPackageInfo);
+    cleanupTags(newPackage);
+    return Promise.resolve(newPackage);
   }
 }

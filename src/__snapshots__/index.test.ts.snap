@@ -70,9 +70,7 @@ Object {
   "_distfiles": Object {},
   "_rev": "",
   "_uplinks": Object {},
-  "dist-tags": Object {
-    "latest": "3.0.0",
-  },
+  "dist-tags": Object {},
   "name": "@babel/test",
   "readme": "
 Some versions of package are blocked by rules: >2.0.0,<1.3.0",
@@ -140,9 +138,7 @@ Object {
   "_distfiles": Object {},
   "_rev": "",
   "_uplinks": Object {},
-  "dist-tags": Object {
-    "latest": "3.0.0",
-  },
+  "dist-tags": Object {},
   "name": "@babel/test",
   "readme": "All package versions blocked by rule",
   "time": Object {
@@ -201,9 +197,7 @@ Object {
   "_distfiles": Object {},
   "_rev": "",
   "_uplinks": Object {},
-  "dist-tags": Object {
-    "latest": "3.0.0",
-  },
+  "dist-tags": Object {},
   "name": "@babel/test",
   "readme": "All packages in scope @babel blocked by rule",
   "time": Object {
@@ -262,9 +256,7 @@ Object {
   "_distfiles": Object {},
   "_rev": "",
   "_uplinks": Object {},
-  "dist-tags": Object {
-    "latest": "3.0.0",
-  },
+  "dist-tags": Object {},
   "name": "@babel/test",
   "readme": "
 Some versions of package are blocked by rules: >1.0.0",
