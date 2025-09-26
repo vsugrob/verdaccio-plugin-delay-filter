@@ -1,20 +1,20 @@
 # verdaccio-plugin-delay-filter
 
-> Plugin for filtering packages with security purposes
+Plugin for filtering packages with security purposes.
 
 ---
 
 ## Usage
 
-- Install the plugin
+### Install the plugin
 
 ```shell
 npm i -g verdaccio-plugin-delay-filter
 ```
 
-- Configure options:
+### Configure options:
 
-### Filter package versions by age
+#### Filter package versions by age
 
 ```yaml
 filters:
@@ -22,7 +22,7 @@ filters:
     minAgeDays: 30 # Block versions younger than 30 days
 ```
 
-### Block by scope or package
+#### Block by scope or package
 
 ```yaml
 filters:
@@ -33,7 +33,7 @@ filters:
       - package: @coolauthor/stolen # block a malicious package
 ```
 
-### Block package versions
+#### Block package versions
 
 ```yaml
 filters:
@@ -45,7 +45,7 @@ filters:
           # uses https://www.npmjs.com/package/semver syntax
 ```
 
-### Replace newer package versions with older version
+#### Replace newer package versions with older version
 
 ```yaml
 filters:
@@ -58,19 +58,15 @@ filters:
           # use when package is used in transient dependencies and 'block' breaks the installs
 ```
 
-### dateThreshold (DEPRECATED)
+#### dateThreshold
 
-This option is deprecated and is to be used **only** if you need a fast solution and you are **sure** your security was breached recently.
-
-- Add to verdaccio config (_for example you want to exclude package versions that were published after march 10, 2022_)
+Add this if you want to exclude package versions that were published after march 10, 2022.
 
 ```yaml
 filters:
   plugin-delay-filter:
     dateThreshold: '2022-03-10T23:00:00.000Z'
 ```
-
-- [Start verdaccio](https://verdaccio.org/docs/installation)
 
 ## Development
 

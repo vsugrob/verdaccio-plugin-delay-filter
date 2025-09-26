@@ -10,7 +10,7 @@
   - ✅ Split config into several task-based sections.
   - 🔴 Describe main intent of this package - filtering versions by age to prevent 0-day attacks.
   - ✅ Describe configuration of minAgeDays parameter.
-  - 🔴 Describe installation more thoroughly. It's not enough to just npm install -g.
-  - 🔴 Mention where to config "filters:" (config.yaml verdaccio).
-  - 🔴 Remove deprecation from dateThreshold parameter. It's not that useless actually.
+  - 🔴 Describe installation more thoroughly. It's not enough to just run npm install -g.
+  - 🔴 Mention where to configure "filters:" (config.yaml verdaccio).
+  - ✅ Remove deprecation from dateThreshold parameter. It's not that useless actually.
 - 🔴 Fix vulnerabilities revealed by npm audit: 39 vulnerabilities (7 low, 18 moderate, 14 high).
