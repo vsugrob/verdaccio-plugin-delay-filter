@@ -11,8 +11,16 @@ Object {
   },
   "name": "@babel/test",
   "readme": "
-Some versions of package are blocked by rules: >1.0.0,<=1.0.0",
-  "versions": Object {},
+Some versions of package are blocked by rules: >2.0.0,<1.3.0",
+  "versions": Object {
+    "1.5.0": Object {
+      "_id": "",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+  },
 }
 `;
 

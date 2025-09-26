@@ -23,6 +23,7 @@ const examplePackage: Package = {
   name: '@babel/test',
   versions: {
     '1.0.0': exampleVersion,
+    '1.5.0': exampleVersion,
     '3.0.0': exampleVersion,
   },
 };
@@ -60,7 +61,7 @@ describe('filters blocked packages', () => {
 
   test('filters when multiple rules are for versions', () => {
     const block = new Map<string, ParsedBlockRule>([
-      ['@babel/test', { block: [new semver.Range('>1.0.0'), new semver.Range('<=1.0.0')] }],
+      ['@babel/test', { block: [new semver.Range('>2.0.0'), new semver.Range('<1.3.0')] }],
     ]);
 
     expect(filterBlockedVersions(examplePackage, block, logger)).toMatchSnapshot();
