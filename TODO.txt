@@ -1,4 +1,0 @@
-- Add 'minAgeDays' configuration option.
--- Add unit test for this option.
-- Fix vulnerabilities revealed by npm audit:
-  39 vulnerabilities (7 low, 18 moderate, 14 high).

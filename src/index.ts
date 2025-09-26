@@ -289,11 +289,24 @@ export default class VerdaccioMiddlewarePlugin implements IPluginStorageFilter<C
       throw new TypeError(`Could not parse rule ${JSON.stringify(value, null, 4)} in skipChecksFor`);
     }, new Map<string, ParsedBlockRule>());
 
-    const dateThreshold = config.dateThreshold ? new Date(config.dateThreshold) : null;
+    let dateThreshold = config.dateThreshold ? new Date(config.dateThreshold) : null;
 
     // eslint-disable-next-line no-prototype-builtins
     if (dateThreshold && isNaN(dateThreshold.getTime())) {
       throw new TypeError(`Invalid date ${config.dateThreshold} were provided for dateThreshold`);
+    }
+
+    const minAgeDays = config.minAgeDays ? Number(config.minAgeDays) : null;
+    // eslint-disable-next-line no-prototype-builtins
+    if (minAgeDays !== null) {
+      if (isNaN(minAgeDays) || minAgeDays < 0) {
+        throw new TypeError(`Invalid number ${config.minAgeDays} was provided for minAgeDays`);
+      }
+
+      const ageThreshold = new Date(Date.now() - minAgeDays * 24 * 60 * 60 * 1000);
+      if (!dateThreshold || dateThreshold > ageThreshold) {
+        dateThreshold = ageThreshold;
+      }
     }
 
     this.parsedConfig = {
