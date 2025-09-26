@@ -142,9 +142,12 @@ export function filterBlockedVersions(
     throw new Error('Unexpected case - blockRule for package should never be "scope"');
   }
 
-  const newPackageInfo = getPackageClone(packageInfo);
+  const blockedVersionRanges = blockRule.block;
+  if (blockedVersionRanges.length === 0) {
+    return packageInfo;
+  }
 
-  const blockedVersionRanges = blockRule.block as Range[];
+  const newPackageInfo = getPackageClone(packageInfo);
 
   // Add debug info for devs
   newPackageInfo.readme =
