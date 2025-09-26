@@ -2,9 +2,9 @@ import { describe, expect, it } from '@jest/globals';
 import { Logger, Package, Version } from '@verdaccio/types';
 import * as semver from 'semver';
 
-import { ParsedBlockRule } from '../types';
+import { CustomConfig, ParsedBlockRule } from '../types';
 
-import { filterBlockedVersions } from './index';
+import VerdaccioMiddlewarePlugin, { filterBlockedVersions } from './index';
 
 const exampleVersion: Version = {
   _id: '',
@@ -26,6 +26,12 @@ const babelTestPackage: Package = {
     '1.5.0': exampleVersion,
     '3.0.0': exampleVersion,
   },
+
+  time: {
+    '1.0.0': '2020-01-01T00:00:00.000Z',
+    '1.5.0': '2022-01-01T00:00:00.000Z',
+    '3.0.0': '2024-01-01T00:00:00.000Z',
+  },
 };
 
 const typesNodePackage: Package = {
@@ -39,6 +45,12 @@ const typesNodePackage: Package = {
     '1.0.0': exampleVersion,
     '2.2.0': exampleVersion,
     '2.6.3': exampleVersion,
+  },
+
+  time: {
+    '1.0.0': '2010-01-01T00:00:00.000Z',
+    '2.2.0': '2015-01-01T00:00:00.000Z',
+    '2.6.3': '2025-01-01T00:00:00.000Z',
   },
 };
 
@@ -91,5 +103,21 @@ describe('filterBlockedVersions()', () => {
     ]);
 
     expect(filterBlockedVersions(babelTestPackage, block, logger)).toMatchSnapshot();
+  });
+});
+
+describe('VerdaccioMiddlewarePlugin', () => {
+  it('filters by age', async function() {
+    const latestDateWeWantToSee = new Date('2023');
+    const ageMs = new Date().getTime() - latestDateWeWantToSee.getTime();
+    const ageDays = ageMs / (1000 * 60 * 60 * 24);
+
+    const config = {
+      minAgeDays: ageDays,
+    } as CustomConfig; // Some properties are omitted on purpose
+    const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
+
+    expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
+    expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
   });
 });

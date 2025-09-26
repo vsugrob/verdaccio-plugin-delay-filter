@@ -4,6 +4,7 @@ import { Range } from 'semver';
 export type PackageBlockRule = { scope: string } | { package: string } | { package: string; versions: string };
 export interface CustomConfig extends Config {
   dateThreshold?: string | number;
+  minAgeDays?: number;
   block?: Array<PackageBlockRule>;
 }
 
