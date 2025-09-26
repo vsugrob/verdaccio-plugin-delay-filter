@@ -1,6 +1,6 @@
 # verdaccio-plugin-delay-filter
 
-> plugin for filtering packages with security purposes
+> Plugin for filtering packages with security purposes
 
 ---
 
@@ -13,6 +13,14 @@ npm i -g verdaccio-plugin-delay-filter
 ```
 
 - Configure options:
+
+### Filter package versions by age
+
+```yaml
+filters:
+  plugin-delay-filter:
+    minAgeDays: 30 # Block versions younger than 30 days
+```
 
 ### Block by scope or package
 
