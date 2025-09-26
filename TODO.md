@@ -6,7 +6,8 @@
   - ✅ Remove export for filterBlockedVersions().
 - ✅ Fix dist-tags/latest still contains version that was filtered out.
 - ✅ Make dist-tags/latest set to latest version after filtering.
-- 🔴 Fix time property still contains entries for versions that were cut.
+- ✅ Fix time property still contains entries for versions that were cut.
+- 🔴 Fix side effects of not cloning package under some conditions.
 - 🔴 Update README.md:
   - ✅ Split config into several task-based sections.
   - 🔴 Describe main intent of this package - filtering versions by age to prevent 0-day attacks.

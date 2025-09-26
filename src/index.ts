@@ -36,6 +36,19 @@ function cleanupTags(packageInfo: Package): void {
   });
 }
 
+function cleanupTime(packageInfo: Package): void {
+  const time = packageInfo.time;
+  if (!time) {
+    return;
+  }
+
+  Object.entries(time).forEach(([version, _]) => {
+    if (!packageInfo.versions[version]) {
+      delete time[version];
+    }
+  });
+}
+
 function setupLatestTag(packageInfo: Package): void {
   const versions = Object.keys(packageInfo.versions);
   if (versions.length === 0) {
@@ -59,6 +72,9 @@ function getPackageClone(packageInfo: Readonly<Package>): Package {
     },
     'dist-tags': {
       ...packageInfo['dist-tags'],
+    },
+    time: {
+      ...packageInfo.time,
     },
   };
 }
@@ -341,7 +357,7 @@ export default class VerdaccioMiddlewarePlugin implements IPluginStorageFilter<C
 
     let newPackage = packageInfo;
     if (block.size > 0) {
-      newPackage = filterBlockedVersions(packageInfo, block, this.logger);
+      newPackage = filterBlockedVersions(newPackage, block, this.logger);
     }
 
     if (dateThreshold) {
@@ -350,6 +366,7 @@ export default class VerdaccioMiddlewarePlugin implements IPluginStorageFilter<C
 
     cleanupTags(newPackage);
     setupLatestTag(newPackage);
+    cleanupTime(newPackage);
     return Promise.resolve(newPackage);
   }
 }
