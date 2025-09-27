@@ -8,11 +8,11 @@
 - ✅ Make `dist-tags/latest` set to latest version after filtering.
 - ✅ Fix `time` property still contains entries for versions that were cut.
 - ✅ Fix side effects of not cloning package under some conditions.
-- 🔴 Fix `minAgeDays` sets `dateThreshold` internally.
+- ✅ Fix `minAgeDays` sets `dateThreshold` internally.
   Server can be run for days/months and `dateThreshold` will stay fixed
   while user expects age to be calculated based on the current date.
   - ✅ Compare version age with minAgeDays in each `filter_metadata()` call.
-  - 🔴 Add unit test checking that earliest effectife date threshold is applied.
+  - ✅ Add unit test checking that earliest effective date threshold is applied.
 - 🔴 Fix `created` and `modified` are removed from `time`.
 - 🔴 Update README.md:
   - ✅ Split config into several task-based sections.

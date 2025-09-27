@@ -65,14 +65,20 @@ const logger: Logger = {
   trace: noop,
 };
 
+function getDaysSince(date: Date | string): number {
+  if (typeof date === 'string') {
+    date = new Date(date);
+  }
+
+  const ageMs = new Date().getTime() - date.getTime();
+  const ageDays = ageMs / (1000 * 60 * 60 * 24);
+  return ageDays;
+}
+
 describe('VerdaccioMiddlewarePlugin', () => {
   it('filters by age', async function() {
-    const latestDateWeWantToSee = new Date('2023');
-    const ageMs = new Date().getTime() - latestDateWeWantToSee.getTime();
-    const ageDays = ageMs / (1000 * 60 * 60 * 24);
-
     const config = {
-      minAgeDays: ageDays,
+      minAgeDays: getDaysSince('2023'),
     } as CustomConfig; // Some properties are omitted on purpose
     const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
 
@@ -81,6 +87,36 @@ describe('VerdaccioMiddlewarePlugin', () => {
 
     // Should not block 2.6.3 version of @types/node
     expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
+  });
+
+  describe('dateThreshold combined with minAgeDays', () => {
+    it("filters by age when it's earlier than date threshold", async function() {
+      const config = {
+        minAgeDays: getDaysSince('2023-01-01'),
+        dateThreshold: '2024-06-01',
+      } as CustomConfig; // Some properties are omitted on purpose
+      const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
+
+      // Should block 3.0.0 version of @babel/test
+      expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
+
+      // Should not block 2.6.3 version of @types/node
+      expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
+    });
+
+    it("filters by date threshold when it's earlier than age", async function() {
+      const config = {
+        minAgeDays: getDaysSince('2024-06-01'),
+        dateThreshold: '2023-01-01',
+      } as CustomConfig; // Some properties are omitted on purpose
+      const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
+
+      // Should block 3.0.0 version of @babel/test
+      expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
+
+      // Should not block 2.6.3 version of @types/node
+      expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
+    });
   });
 
   it('filters by scope', async function() {
