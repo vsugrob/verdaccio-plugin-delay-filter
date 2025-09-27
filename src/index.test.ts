@@ -78,24 +78,10 @@ function getDaysSince(date: Date | string): number {
 }
 
 describe('VerdaccioMiddlewarePlugin', () => {
-  it('filters by age', async function() {
-    const config = {
-      minAgeDays: getDaysSince('2023'),
-    } as CustomConfig; // Some properties are omitted on purpose
-    const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
-
-    // Should block 3.0.0 version of @babel/test
-    expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
-
-    // Should not block 2.6.3 version of @types/node
-    expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
-  });
-
-  describe('dateThreshold combined with minAgeDays', () => {
-    it("filters by age when it's earlier than date threshold", async function() {
+  describe('date filtering', () => {
+    it('filters by age', async function() {
       const config = {
-        minAgeDays: getDaysSince('2023-01-01'),
-        dateThreshold: '2024-06-01',
+        minAgeDays: getDaysSince('2023'),
       } as CustomConfig; // Some properties are omitted on purpose
       const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
 
@@ -106,73 +92,91 @@ describe('VerdaccioMiddlewarePlugin', () => {
       expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
     });
 
-    it("filters by date threshold when it's earlier than age", async function() {
-      const config = {
-        minAgeDays: getDaysSince('2024-06-01'),
-        dateThreshold: '2023-01-01',
-      } as CustomConfig; // Some properties are omitted on purpose
-      const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
+    describe('dateThreshold combined with minAgeDays', () => {
+      it("filters by age when it's earlier than date threshold", async function() {
+        const config = {
+          minAgeDays: getDaysSince('2023-01-01'),
+          dateThreshold: '2024-06-01',
+        } as CustomConfig; // Some properties are omitted on purpose
+        const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
 
-      // Should block 3.0.0 version of @babel/test
-      expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
+        // Should block 3.0.0 version of @babel/test
+        expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
 
-      // Should not block 2.6.3 version of @types/node
-      expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
+        // Should not block 2.6.3 version of @types/node
+        expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
+      });
+
+      it("filters by date threshold when it's earlier than age", async function() {
+        const config = {
+          minAgeDays: getDaysSince('2024-06-01'),
+          dateThreshold: '2023-01-01',
+        } as CustomConfig; // Some properties are omitted on purpose
+        const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
+
+        // Should block 3.0.0 version of @babel/test
+        expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
+
+        // Should not block 2.6.3 version of @types/node
+        expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
+      });
     });
   });
 
-  it('filters by scope', async function() {
-    const config = {
-      block: [{ scope: '@babel' }],
-    } as CustomConfig; // Some properties are omitted on purpose
-    const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
+  describe('package and version filtering', () => {
+    it('filters by scope', async function() {
+      const config = {
+        block: [{ scope: '@babel' }],
+      } as CustomConfig; // Some properties are omitted on purpose
+      const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
 
-    // Should block all versions of @babel/test
-    expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
+      // Should block all versions of @babel/test
+      expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
 
-    // Should not block @types/node
-    expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
-  });
+      // Should not block @types/node
+      expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
+    });
 
-  it('filters by package', async function() {
-    const config = {
-      block: [{ package: '@babel/test' }],
-    } as CustomConfig; // Some properties are omitted on purpose
-    const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
+    it('filters by package', async function() {
+      const config = {
+        block: [{ package: '@babel/test' }],
+      } as CustomConfig; // Some properties are omitted on purpose
+      const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
 
-    // Should block all versions of @babel/test
-    expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
+      // Should block all versions of @babel/test
+      expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
 
-    // Should not block @types/node
-    expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
-  });
+      // Should not block @types/node
+      expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
+    });
 
-  it('filters by versions', async function() {
-    const config = {
-      block: [{ package: '@babel/test', versions: '>1.0.0' }],
-    } as CustomConfig; // Some properties are omitted on purpose
-    const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
+    it('filters by versions', async function() {
+      const config = {
+        block: [{ package: '@babel/test', versions: '>1.0.0' }],
+      } as CustomConfig; // Some properties are omitted on purpose
+      const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
 
-    // Should block all versions of @babel/test greater than 1.0.0
-    expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
+      // Should block all versions of @babel/test greater than 1.0.0
+      expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
 
-    // Should not block @types/node
-    expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
-  });
+      // Should not block @types/node
+      expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
+    });
 
-  it('filters by multiple versions', async function() {
-    const config = {
-      block: [
-        { package: '@babel/test', versions: '>2.0.0' },
-        { package: '@babel/test', versions: '<1.3.0' },
-      ],
-    } as CustomConfig; // Some properties are omitted on purpose
-    const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
+    it('filters by multiple versions', async function() {
+      const config = {
+        block: [
+          { package: '@babel/test', versions: '>2.0.0' },
+          { package: '@babel/test', versions: '<1.3.0' },
+        ],
+      } as CustomConfig; // Some properties are omitted on purpose
+      const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
 
-    // Should leave only 1.5.0 version of @babel/test
-    expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
+      // Should leave only 1.5.0 version of @babel/test
+      expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
 
-    // Should not block @types/node
-    expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
+      // Should not block @types/node
+      expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
+    });
   });
 });
