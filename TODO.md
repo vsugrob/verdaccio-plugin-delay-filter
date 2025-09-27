@@ -16,7 +16,10 @@
 - ✅ Fix `created` and `modified` are removed from `time`.
   - ✅ Recalculate `created` and `modified` and write to `time`.
   - ✅ Update tests accordingly. Add `created` and `modified` to initial data.
-- 🔴 Fix `filterBlockedVersions()` should not update readme when no actual changes to package were made.
+- ✅ Fix `filterBlockedVersions()` should not update readme when no actual changes to package were made.
+- 🔴 Test that block by version does not modify readme when nothing was changed.
+- 🔴 Test that replace by version does not modify readme when nothing was changed.
+- 🔴 Test that `dateThreshold` setting works.
 - 🔴 Update README.md:
   - ✅ Split config into several task-based sections.
   - 🔴 Describe main intent of this package - filtering versions by age to prevent 0-day attacks.

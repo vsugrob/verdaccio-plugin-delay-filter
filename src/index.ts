@@ -191,12 +191,8 @@ function filterBlockedVersions(packageInfo: Package, block: Map<string, ParsedBl
     blockRule.strategy = 'block';
   }
 
-  // Add debug info for devs
-  packageInfo.readme =
-    (packageInfo.readme || '') +
-    `\nSome versions of package are blocked by rules: ${blockedVersionRanges.map((range) => range.raw)}`;
-
   if (blockRule.strategy === 'block') {
+    let blockedVersionsCount = 0;
     Object.keys(packageInfo.versions).forEach((version) => {
       blockedVersionRanges.forEach((versionRange) => {
         if (
@@ -206,9 +202,19 @@ function filterBlockedVersions(packageInfo: Package, block: Map<string, ParsedBl
           })
         ) {
           delete packageInfo.versions[version];
+          blockedVersionsCount++;
         }
       });
     });
+
+    if (blockedVersionsCount > 0) {
+      // Add debug info for devs
+      packageInfo.readme =
+        (packageInfo.readme || '') +
+        `\nSome versions(${blockedVersionsCount}) of package are blocked by rules: ${blockedVersionRanges.map(
+          (range) => range.raw
+        )}`;
+    }
 
     return packageInfo;
   }
@@ -254,7 +260,6 @@ function filterBlockedVersions(packageInfo: Package, block: Map<string, ParsedBl
   removedVersions.forEach(([version]) => {
     logger.debug(`No version to replace ${version}`);
     delete packageInfo.versions[version];
-    return;
   });
 
   replacedVersions.forEach(([version, replaceVersion]) => {
@@ -264,10 +269,17 @@ function filterBlockedVersions(packageInfo: Package, block: Map<string, ParsedBl
     };
   });
 
-  packageInfo.readme += `\nSome versions of package are fully blocked: ${removedVersions.map((a) => a[0])}`;
-  packageInfo.readme += `\nSome versions of package are replaced by other: ${removedVersions.map(
-    (a) => `${a[0]} => ${a[1]}`
-  )}`;
+  if (removedVersions.length > 0) {
+    packageInfo.readme +=
+      `\nSome versions of package could not be replaced and thus are fully blocked (${removedVersions.length}):` +
+      ` ${removedVersions.map((a) => a[0])}`;
+  }
+
+  if (replacedVersions.length > 0) {
+    packageInfo.readme +=
+      `\nSome versions of package are replaced by other(${replacedVersions.length}):` +
+      ` ${replacedVersions.map((a) => `${a[0]} => ${a[1]}`)}`;
+  }
 
   return packageInfo;
 }
