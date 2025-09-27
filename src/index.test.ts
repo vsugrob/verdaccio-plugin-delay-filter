@@ -32,6 +32,7 @@ const babelTestPackage: Package = {
     '1.5.0': '2022-01-01T00:00:00.000Z',
     '3.0.0': '2024-01-01T00:00:00.000Z',
   },
+  readme: 'It is a babel test package',
 };
 
 const typesNodePackage: Package = {
@@ -53,6 +54,7 @@ const typesNodePackage: Package = {
     '2.2.0': '2015-01-01T00:00:00.000Z',
     '2.6.3': '2025-01-01T00:00:00.000Z',
   },
+  readme: 'It is a types node package',
 };
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -203,6 +205,28 @@ describe('VerdaccioMiddlewarePlugin', () => {
 
       // Should not replace versions of @types/node
       expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
+    });
+
+    describe('readme stays intact when no filtering applied', () => {
+      it('filter by versions', async function() {
+        const config = {
+          block: [{ package: '@babel/test', versions: '>10.0.0' }],
+        } as CustomConfig; // Some properties are omitted on purpose
+        const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
+
+        // Should not change anything
+        expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
+      });
+
+      it('version replacement', async function() {
+        const config = {
+          block: [{ package: '@babel/test', versions: '>10.0.0', strategy: 'replace' }],
+        } as CustomConfig; // Some properties are omitted on purpose
+        const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
+
+        // Should not change anything
+        expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
+      });
     });
   });
 });
