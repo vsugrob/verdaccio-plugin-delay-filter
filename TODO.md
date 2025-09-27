@@ -20,7 +20,7 @@
 - 🔴 Test that block by version does not modify readme when nothing was changed.
 - 🔴 Test that replace by version does not modify readme when nothing was changed.
 - ✅ Fix replace by version strategy is not specified in type of config input.
-- 🔴 Test that replace by version setting works.
+- ✅ Test that replace by version setting works.
 - ✅ Test that `dateThreshold` setting works.
 - 🔴 Update README.md:
   - ✅ Split config into several task-based sections.

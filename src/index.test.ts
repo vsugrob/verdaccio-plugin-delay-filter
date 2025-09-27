@@ -5,7 +5,7 @@ import { CustomConfig } from './types';
 
 import VerdaccioMiddlewarePlugin from './index';
 
-const exampleVersion: Version = {
+const versionStub: Version = {
   _id: '',
   main: '',
   name: '',
@@ -21,9 +21,9 @@ const babelTestPackage: Package = {
   _uplinks: {},
   name: '@babel/test',
   versions: {
-    '1.0.0': exampleVersion,
-    '1.5.0': exampleVersion,
-    '3.0.0': exampleVersion,
+    '1.0.0': { ...versionStub, _id: '@babel/test@1.0.0' },
+    '1.5.0': { ...versionStub, _id: '@babel/test@1.5.0' },
+    '3.0.0': { ...versionStub, _id: '@babel/test@3.0.0' },
   },
   time: {
     modified: '2024-01-01T00:00:00.123Z',
@@ -42,9 +42,9 @@ const typesNodePackage: Package = {
   _uplinks: {},
   name: '@types/node',
   versions: {
-    '1.0.0': exampleVersion,
-    '2.2.0': exampleVersion,
-    '2.6.3': exampleVersion,
+    '1.0.0': { ...versionStub, _id: '@types/node@1.0.0' },
+    '2.2.0': { ...versionStub, _id: '@types/node@2.2.0' },
+    '2.6.3': { ...versionStub, _id: '@types/node@2.6.3' },
   },
   time: {
     modified: '2025-01-01T00:00:00.456Z',
@@ -189,6 +189,19 @@ describe('VerdaccioMiddlewarePlugin', () => {
       expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
 
       // Should not block @types/node
+      expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
+    });
+
+    it('replaces versions', async function() {
+      const config = {
+        block: [{ package: '@babel/test', versions: '>1.0.0', strategy: 'replace' }],
+      } as CustomConfig; // Some properties are omitted on purpose
+      const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
+
+      // Should replace all versions of @babel/test greater than 1.0.0
+      expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
+
+      // Should not replace versions of @types/node
       expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
     });
   });
