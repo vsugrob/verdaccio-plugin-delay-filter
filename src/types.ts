@@ -1,7 +1,11 @@
 import { Config } from '@verdaccio/types';
 import { Range } from 'semver';
 
-export type PackageBlockRule = { scope: string } | { package: string } | { package: string; versions: string };
+export type PackageBlockRule =
+  | { scope: string }
+  | { package: string }
+  | { package: string; versions: string; strategy?: BlockStrategy };
+
 export interface CustomConfig extends Config {
   dateThreshold?: string | number;
   minAgeDays?: number;
