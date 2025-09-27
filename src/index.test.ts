@@ -25,8 +25,9 @@ const babelTestPackage: Package = {
     '1.5.0': exampleVersion,
     '3.0.0': exampleVersion,
   },
-
   time: {
+    modified: '2024-01-01T00:00:00.123Z',
+    created: '2020-01-01T00:00:00.000Z',
     '1.0.0': '2020-01-01T00:00:00.000Z',
     '1.5.0': '2022-01-01T00:00:00.000Z',
     '3.0.0': '2024-01-01T00:00:00.000Z',
@@ -45,8 +46,9 @@ const typesNodePackage: Package = {
     '2.2.0': exampleVersion,
     '2.6.3': exampleVersion,
   },
-
   time: {
+    modified: '2025-01-01T00:00:00.456Z',
+    created: '2010-01-01T00:00:00.000Z',
     '1.0.0': '2010-01-01T00:00:00.000Z',
     '2.2.0': '2015-01-01T00:00:00.000Z',
     '2.6.3': '2025-01-01T00:00:00.000Z',

@@ -13,9 +13,10 @@
   while user expects age to be calculated based on the current date.
   - ✅ Compare version age with minAgeDays in each `filter_metadata()` call.
   - ✅ Add unit test checking that earliest effective date threshold is applied.
-- 🔴 Fix `created` and `modified` are removed from `time`.
+- ✅ Fix `created` and `modified` are removed from `time`.
   - ✅ Recalculate `created` and `modified` and write to `time`.
-  - 🔴 Update tests accordingly. Add `created` and `modified` to initial data.
+  - ✅ Update tests accordingly. Add `created` and `modified` to initial data.
+- 🔴 Fix `filterBlockedVersions()` should not update readme when no actual changes to package were made.
 - 🔴 Update README.md:
   - ✅ Split config into several task-based sections.
   - 🔴 Describe main intent of this package - filtering versions by age to prevent 0-day attacks.
