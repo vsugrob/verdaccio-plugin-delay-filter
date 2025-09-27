@@ -260,6 +260,7 @@ export default class VerdaccioMiddlewarePlugin implements IPluginStorageFilter<C
   private readonly config: CustomConfig;
   private readonly parsedConfig: {
     dateThreshold: Date | null;
+    minAgeMs: number | null;
     block: Map<string, ParsedBlockRule>;
   };
   protected readonly logger: PluginOptions<unknown>['logger'];
@@ -311,7 +312,7 @@ export default class VerdaccioMiddlewarePlugin implements IPluginStorageFilter<C
       throw new TypeError(`Could not parse rule ${JSON.stringify(value, null, 4)} in skipChecksFor`);
     }, new Map<string, ParsedBlockRule>());
 
-    let dateThreshold = config.dateThreshold ? new Date(config.dateThreshold) : null;
+    const dateThreshold = config.dateThreshold ? new Date(config.dateThreshold) : null;
 
     // eslint-disable-next-line no-prototype-builtins
     if (dateThreshold && isNaN(dateThreshold.getTime())) {
@@ -319,21 +320,20 @@ export default class VerdaccioMiddlewarePlugin implements IPluginStorageFilter<C
     }
 
     const minAgeDays = config.minAgeDays ? Number(config.minAgeDays) : null;
+    let minAgeMs: number | null = null;
     // eslint-disable-next-line no-prototype-builtins
     if (minAgeDays !== null) {
       if (isNaN(minAgeDays) || minAgeDays < 0) {
         throw new TypeError(`Invalid number ${config.minAgeDays} was provided for minAgeDays`);
       }
 
-      const ageThreshold = new Date(Date.now() - minAgeDays * 24 * 60 * 60 * 1000);
-      if (!dateThreshold || dateThreshold > ageThreshold) {
-        dateThreshold = ageThreshold;
-      }
+      minAgeMs = minAgeDays * 24 * 60 * 60 * 1000;
     }
 
     this.parsedConfig = {
       ...config,
       dateThreshold,
+      minAgeMs,
       block: blockMap,
     };
 
@@ -345,15 +345,24 @@ export default class VerdaccioMiddlewarePlugin implements IPluginStorageFilter<C
   }
 
   public async filter_metadata(packageInfo: Readonly<Package>): Promise<Package> {
-    const { dateThreshold, block } = this.parsedConfig;
+    const { dateThreshold, minAgeMs, block } = this.parsedConfig;
 
     let newPackage = getPackageClone(packageInfo);
     if (block.size > 0) {
       newPackage = filterBlockedVersions(newPackage, block, this.logger);
     }
 
-    if (dateThreshold) {
-      newPackage = await filterVersionsByPublishDate(newPackage, dateThreshold);
+    let earliestDateThreshold: Date | null = null;
+    if (minAgeMs) {
+      earliestDateThreshold = new Date(Date.now() - minAgeMs);
+    }
+
+    if (dateThreshold && (!earliestDateThreshold || dateThreshold < earliestDateThreshold)) {
+      earliestDateThreshold = dateThreshold;
+    }
+
+    if (earliestDateThreshold) {
+      newPackage = await filterVersionsByPublishDate(newPackage, earliestDateThreshold);
     }
 
     cleanupTags(newPackage);

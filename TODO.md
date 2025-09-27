@@ -1,23 +1,25 @@
-- 🔴 Add 'minAgeDays' configuration option.
+- 🔴 Add `minAgeDays` configuration option.
   - ✅ Implement filtering based on age.
   - ✅ Add unit test for this option.
   - 🔴 Describe in README.md why this option is helpful in the light of the latest supply chain attack (Shai Hulud).
-- ✅ Rewrite all tests to test VerdaccioMiddlewarePlugin instead of filterBlockedVersions().
+- ✅ Rewrite all tests to test `VerdaccioMiddlewarePlugin` instead of `filterBlockedVersions()`.
   - ✅ Remove export for filterBlockedVersions().
-- ✅ Fix dist-tags/latest still contains version that was filtered out.
-- ✅ Make dist-tags/latest set to latest version after filtering.
-- ✅ Fix time property still contains entries for versions that were cut.
+- ✅ Fix `dist-tags/latest` still contains version that was filtered out.
+- ✅ Make `dist-tags/latest` set to latest version after filtering.
+- ✅ Fix `time` property still contains entries for versions that were cut.
 - ✅ Fix side effects of not cloning package under some conditions.
-- 🔴 Fix minAgeDays sets dateThreshold internally.
-  Server can be run for days/months and dateThreshold will stay fixed
+- 🔴 Fix `minAgeDays` sets `dateThreshold` internally.
+  Server can be run for days/months and `dateThreshold` will stay fixed
   while user expects age to be calculated based on the current date.
-- 🔴 Fix 'created' and 'modified' are removed from 'time'.
+  - ✅ Compare version age with minAgeDays in each `filter_metadata()` call.
+  - 🔴 Add unit test checking that earliest effectife date threshold is applied.
+- 🔴 Fix `created` and `modified` are removed from `time`.
 - 🔴 Update README.md:
   - ✅ Split config into several task-based sections.
   - 🔴 Describe main intent of this package - filtering versions by age to prevent 0-day attacks.
-  - ✅ Describe configuration of minAgeDays parameter.
-  - 🔴 Describe installation more thoroughly. It's not enough to just run npm install -g.
+  - ✅ Describe configuration of `minAgeDays` parameter.
+  - 🔴 Describe installation more thoroughly. It's not enough to just run `npm install -g`.
   - 🔴 Mention where to configure "filters:" (config.yaml verdaccio).
-  - ✅ Remove deprecation from dateThreshold parameter. It's not that useless actually.
+  - ✅ Remove deprecation from `dateThreshold` parameter. It's not that useless actually.
 - ✅ Do not compile index.test.ts into lib/index.test.js. It should not end up in distrubution files.
 - 🔴 Fix vulnerabilities revealed by npm audit: 39 vulnerabilities (7 low, 18 moderate, 14 high).
