@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`VerdaccioMiddlewarePlugin date filtering dateThreshold combined with minAgeDays filters by age when it's earlier than date threshold 1`] = `
+exports[`VerdaccioMiddlewarePlugin date filtering dateThreshold combined with minAgeDays filters by dateThreshold when it's earlier than minAgeDays 1`] = `
 Object {
   "_attachments": Object {},
   "_distfiles": Object {},
@@ -35,7 +35,7 @@ Object {
 }
 `;
 
-exports[`VerdaccioMiddlewarePlugin date filtering dateThreshold combined with minAgeDays filters by age when it's earlier than date threshold 2`] = `
+exports[`VerdaccioMiddlewarePlugin date filtering dateThreshold combined with minAgeDays filters by dateThreshold when it's earlier than minAgeDays 2`] = `
 Object {
   "_attachments": Object {},
   "_distfiles": Object {},
@@ -70,7 +70,7 @@ Object {
 }
 `;
 
-exports[`VerdaccioMiddlewarePlugin date filtering dateThreshold combined with minAgeDays filters by date threshold when it's earlier than age 1`] = `
+exports[`VerdaccioMiddlewarePlugin date filtering dateThreshold combined with minAgeDays filters by minAgeDays when it's earlier than dateThreshold 1`] = `
 Object {
   "_attachments": Object {},
   "_distfiles": Object {},
@@ -105,7 +105,7 @@ Object {
 }
 `;
 
-exports[`VerdaccioMiddlewarePlugin date filtering dateThreshold combined with minAgeDays filters by date threshold when it's earlier than age 2`] = `
+exports[`VerdaccioMiddlewarePlugin date filtering dateThreshold combined with minAgeDays filters by minAgeDays when it's earlier than dateThreshold 2`] = `
 Object {
   "_attachments": Object {},
   "_distfiles": Object {},
@@ -140,7 +140,7 @@ Object {
 }
 `;
 
-exports[`VerdaccioMiddlewarePlugin date filtering filters by age 1`] = `
+exports[`VerdaccioMiddlewarePlugin date filtering filters by dateThreshold 1`] = `
 Object {
   "_attachments": Object {},
   "_distfiles": Object {},
@@ -175,7 +175,77 @@ Object {
 }
 `;
 
-exports[`VerdaccioMiddlewarePlugin date filtering filters by age 2`] = `
+exports[`VerdaccioMiddlewarePlugin date filtering filters by dateThreshold 2`] = `
+Object {
+  "_attachments": Object {},
+  "_distfiles": Object {},
+  "_rev": "",
+  "_uplinks": Object {},
+  "dist-tags": Object {
+    "latest": "2.2.0",
+  },
+  "name": "@types/node",
+  "time": Object {
+    "1.0.0": "2010-01-01T00:00:00.000Z",
+    "2.2.0": "2015-01-01T00:00:00.000Z",
+    "created": "2010-01-01T00:00:00.000Z",
+    "modified": "2015-01-01T00:00:00.000Z",
+  },
+  "versions": Object {
+    "1.0.0": Object {
+      "_id": "",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+    "2.2.0": Object {
+      "_id": "",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+  },
+}
+`;
+
+exports[`VerdaccioMiddlewarePlugin date filtering filters by minAgeDays 1`] = `
+Object {
+  "_attachments": Object {},
+  "_distfiles": Object {},
+  "_rev": "",
+  "_uplinks": Object {},
+  "dist-tags": Object {
+    "latest": "1.5.0",
+  },
+  "name": "@babel/test",
+  "time": Object {
+    "1.0.0": "2020-01-01T00:00:00.000Z",
+    "1.5.0": "2022-01-01T00:00:00.000Z",
+    "created": "2020-01-01T00:00:00.000Z",
+    "modified": "2022-01-01T00:00:00.000Z",
+  },
+  "versions": Object {
+    "1.0.0": Object {
+      "_id": "",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+    "1.5.0": Object {
+      "_id": "",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+  },
+}
+`;
+
+exports[`VerdaccioMiddlewarePlugin date filtering filters by minAgeDays 2`] = `
 Object {
   "_attachments": Object {},
   "_distfiles": Object {},

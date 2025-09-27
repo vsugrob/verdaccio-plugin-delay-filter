@@ -79,7 +79,7 @@ function getDaysSince(date: Date | string): number {
 
 describe('VerdaccioMiddlewarePlugin', () => {
   describe('date filtering', () => {
-    it('filters by age', async function() {
+    it('filters by minAgeDays', async function() {
       const config = {
         minAgeDays: getDaysSince('2023'),
       } as CustomConfig; // Some properties are omitted on purpose
@@ -92,8 +92,21 @@ describe('VerdaccioMiddlewarePlugin', () => {
       expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
     });
 
+    it('filters by dateThreshold', async function() {
+      const config = {
+        dateThreshold: '2023-01-01',
+      } as CustomConfig; // Some properties are omitted on purpose
+      const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
+
+      // Should block 3.0.0 version of @babel/test
+      expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
+
+      // Should not block 2.6.3 version of @types/node
+      expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
+    });
+
     describe('dateThreshold combined with minAgeDays', () => {
-      it("filters by age when it's earlier than date threshold", async function() {
+      it("filters by minAgeDays when it's earlier than dateThreshold", async function() {
         const config = {
           minAgeDays: getDaysSince('2023-01-01'),
           dateThreshold: '2024-06-01',
@@ -107,7 +120,7 @@ describe('VerdaccioMiddlewarePlugin', () => {
         expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
       });
 
-      it("filters by date threshold when it's earlier than age", async function() {
+      it("filters by dateThreshold when it's earlier than minAgeDays", async function() {
         const config = {
           minAgeDays: getDaysSince('2024-06-01'),
           dateThreshold: '2023-01-01',

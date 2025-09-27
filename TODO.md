@@ -19,7 +19,7 @@
 - ✅ Fix `filterBlockedVersions()` should not update readme when no actual changes to package were made.
 - 🔴 Test that block by version does not modify readme when nothing was changed.
 - 🔴 Test that replace by version does not modify readme when nothing was changed.
-- 🔴 Test that `dateThreshold` setting works.
+- ✅ Test that `dateThreshold` setting works.
 - 🔴 Update README.md:
   - ✅ Split config into several task-based sections.
   - 🔴 Describe main intent of this package - filtering versions by age to prevent 0-day attacks.
