@@ -64,6 +64,22 @@ function setupLatestTag(packageInfo: Package): void {
   packageInfo['dist-tags'].latest = sortedVersions[0];
 }
 
+function setupCreatedAndModified(packageInfo: Package): void {
+  const time = packageInfo.time;
+  if (!time) {
+    return;
+  }
+
+  const times = Object.values(time);
+  if (times.length === 0) {
+    return;
+  }
+
+  const sortedTimes = times.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+  time['created'] = sortedTimes[0];
+  time['modified'] = sortedTimes[sortedTimes.length - 1];
+}
+
 function getPackageClone(packageInfo: Readonly<Package>): Package {
   return {
     ...packageInfo,
@@ -368,6 +384,7 @@ export default class VerdaccioMiddlewarePlugin implements IPluginStorageFilter<C
     cleanupTags(newPackage);
     setupLatestTag(newPackage);
     cleanupTime(newPackage);
+    setupCreatedAndModified(newPackage);
     return Promise.resolve(newPackage);
   }
 }
