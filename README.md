@@ -1,5 +1,7 @@
 # verdaccio-plugin-delay-filter
 
+> **⚠️ Warning:** this plugin works reliably only with Verdaccio 6.2.0. In some of the earlier versions it won't load. In the 8.0.0-next-8.23 version of Verdaccio filtering is not consistent and it will not shield you against unwanted packages! Please use Verdaccio 6.2.0 if you want filtering to be applied correctly.
+
 Plugin for filtering packages and their versions with security purposes. It allows you to make Verdaccio block:
 
 - versions released less than N days ago
