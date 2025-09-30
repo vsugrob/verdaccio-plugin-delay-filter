@@ -2,6 +2,8 @@
 
 Plugin for filtering packages with security purposes.
 
+> **⚠️ Warning:** this is a work-in-progress. Package is not publicly available yet, as there are several integration issues actively solved right now.
+
 ---
 
 ## Usage
