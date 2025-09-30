@@ -1,8 +1,15 @@
 # verdaccio-plugin-delay-filter
 
-Plugin for filtering packages with security purposes.
+Plugin for filtering packages and their versions with security purposes. It allows you to make Verdaccio block:
 
-> **⚠️ Warning:** this is a work-in-progress. Package is not publicly available yet, as there are several integration issues actively solved right now.
+- versions released less than N days ago
+- specific versions or version ranges (with semver semantics)
+- entire packages or even scopes
+- versions released after specific date
+
+Verdaccio configured with this filter allows you to shield yourself against supply chain attacks in popular packages. The most prominent recent attack (Shai-Hulud worm) demonstrated how vulnerable npmjs and public registries are in general. Packages are uploaded without being audited by cybersecurity specialists and any maintainer can be hacked or go rogue and upload malicious code which will be automatically downloaded to your machine upon executing npm install. You can manually restrict direct dependencies of your package to specific versions and think you're protected against such threats, but it's not true since indirect dependecies are most often configured as "download _this_ version or newer" (^1.2.3 format with "^") and there is no way to lock it for new packages which you have no package-lock.json for. It's way better to make npm/pnpm/yarn see only want you want them to see with Verdaccio in conjunction with filtering plugin.
+
+Age-based filtering can protect you at a great degree against threats in popular packages. Community and security firms are quite active in detecting malicious code and usually it takes up to several days for infected versions to be unpublished.
 
 ---
 
@@ -15,6 +22,8 @@ npm i -g verdaccio-plugin-delay-filter
 ```
 
 ### Configure options:
+
+Edit `config.yaml` of Verdaccio to achieve desired filtering.
 
 #### Filter package versions by age
 
