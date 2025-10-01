@@ -71,8 +71,26 @@ function setupLatestTag(packageInfo: Package): void {
     return;
   }
 
-  const sortedVersions = untaggedVersions.sort(semver.rcompare);
-  distTags.latest = sortedVersions[0];
+  const time = packageInfo.time;
+  if (!time) {
+    const sortedVersions = untaggedVersions.sort(semver.rcompare);
+    distTags.latest = sortedVersions[0];
+    return;
+  }
+
+  const versionWithTime = untaggedVersions
+    .map((v) => ({
+      version: v,
+      time: time[v],
+    }))
+    .filter((v) => v.time);
+
+  if (versionWithTime.length === 0) {
+    return;
+  }
+
+  const timeOrderedVersions = versionWithTime.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
+  distTags.latest = timeOrderedVersions[0].version;
 }
 
 /**
