@@ -24,8 +24,7 @@ function splitName(name: string): { name: string; scope?: string } {
 }
 
 /**
- * Delete a tag if it maps to a forbidden version
- * todo: maybe verdaccio does this by itself, check later
+ * Delete a tag if it maps to a removed version
  */
 function cleanupTags(packageInfo: Package): void {
   const distTags = packageInfo['dist-tags'];
@@ -36,6 +35,9 @@ function cleanupTags(packageInfo: Package): void {
   });
 }
 
+/**
+ * Delete a time entry if it maps to a removed version
+ */
 function cleanupTime(packageInfo: Package): void {
   const time = packageInfo.time;
   if (!time) {
@@ -49,6 +51,9 @@ function cleanupTime(packageInfo: Package): void {
   });
 }
 
+/**
+ * Set the latest tag if dist-tags/latest is missing
+ */
 function setupLatestTag(packageInfo: Package): void {
   const distTags = packageInfo['dist-tags'];
   if (distTags.latest) {
@@ -70,6 +75,9 @@ function setupLatestTag(packageInfo: Package): void {
   distTags.latest = sortedVersions[0];
 }
 
+/**
+ * Set the created and modified times
+ */
 function setupCreatedAndModified(packageInfo: Package): void {
   const time = packageInfo.time;
   if (!time) {
@@ -154,10 +162,8 @@ function isPackageAndVersionRule(
 }
 
 /**
- * filter out all blocked package versions. If all package is blocked, or it's scope is blocked - block all versions.
- * @param packageInfo
- * @param block
- * @param logger
+ * Filter out all blocked package versions.
+ * If all package is blocked, or it's scope is blocked - block all versions.
  */
 function filterBlockedVersions(packageInfo: Package, block: Map<string, ParsedBlockRule>, logger: Logger): Package {
   const { scope } = splitName(packageInfo.name);
