@@ -295,6 +295,9 @@ Object {
     "testaccio-test-1.4.2.tgz": Object {
       "url": "https://registry.npmjs.org/@testaccio/test/-/testaccio-test-1.4.2.tgz",
     },
+    "testaccio-test-1.4.4-beta.tgz": Object {
+      "url": "https://registry.npmjs.org/@testaccio/test/-/testaccio-test-1.4.4-beta.tgz",
+    },
     "testaccio-test-1.7.1-beta.tgz": Object {
       "url": "https://registry.npmjs.org/@testaccio/test/-/testaccio-test-1.7.1-beta.tgz",
     },
@@ -314,6 +317,7 @@ Object {
 Some versions(1) of package are blocked by rules: 1.7.0",
   "time": Object {
     "1.4.2": "2021-05-01T00:00:00.000Z",
+    "1.4.4-beta": "2021-06-01T00:00:00.000Z",
     "1.7.1-beta": "2022-03-01T00:00:00.000Z",
     "2.2.1-next": "2023-03-01T00:00:00.000Z",
     "created": "2021-05-01T00:00:00.000Z",
@@ -324,6 +328,16 @@ Some versions(1) of package are blocked by rules: 1.7.0",
       "_id": "@testaccio/test@1.4.2",
       "dist": Object {
         "tarball": "https://registry.npmjs.org/@testaccio/test/-/testaccio-test-1.4.2.tgz",
+      },
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+    "1.4.4-beta": Object {
+      "_id": "@testaccio/test@1.4.4-beta",
+      "dist": Object {
+        "tarball": "https://registry.npmjs.org/@testaccio/test/-/testaccio-test-1.4.4-beta.tgz",
       },
       "main": "",
       "name": "",
@@ -354,12 +368,15 @@ Some versions(1) of package are blocked by rules: 1.7.0",
 }
 `;
 
-exports[`VerdaccioMiddlewarePlugin manifest cleanup latest tag is set to a version with no other tags 1`] = `
+exports[`VerdaccioMiddlewarePlugin manifest cleanup latest tag is set to a latest stable version 1`] = `
 Object {
   "_attachments": Object {},
   "_distfiles": Object {
     "testaccio-test-1.4.2.tgz": Object {
       "url": "https://registry.npmjs.org/@testaccio/test/-/testaccio-test-1.4.2.tgz",
+    },
+    "testaccio-test-1.4.4-beta.tgz": Object {
+      "url": "https://registry.npmjs.org/@testaccio/test/-/testaccio-test-1.4.4-beta.tgz",
     },
     "testaccio-test-1.7.1-beta.tgz": Object {
       "url": "https://registry.npmjs.org/@testaccio/test/-/testaccio-test-1.7.1-beta.tgz",
@@ -380,6 +397,7 @@ Object {
 Some versions(1) of package are blocked by rules: 1.7.0",
   "time": Object {
     "1.4.2": "2021-05-01T00:00:00.000Z",
+    "1.4.4-beta": "2021-06-01T00:00:00.000Z",
     "1.7.1-beta": "2022-03-01T00:00:00.000Z",
     "2.2.1-next": "2023-03-01T00:00:00.000Z",
     "created": "2021-05-01T00:00:00.000Z",
@@ -390,6 +408,16 @@ Some versions(1) of package are blocked by rules: 1.7.0",
       "_id": "@testaccio/test@1.4.2",
       "dist": Object {
         "tarball": "https://registry.npmjs.org/@testaccio/test/-/testaccio-test-1.4.2.tgz",
+      },
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+    "1.4.4-beta": Object {
+      "_id": "@testaccio/test@1.4.4-beta",
+      "dist": Object {
+        "tarball": "https://registry.npmjs.org/@testaccio/test/-/testaccio-test-1.4.4-beta.tgz",
       },
       "main": "",
       "name": "",
@@ -436,6 +464,7 @@ Object {
 Some versions(1) of package are blocked by rules: 1.7.0",
   "time": Object {
     "1.4.2": "2021-05-01T00:00:00.000Z",
+    "1.4.4-beta": "2021-06-01T00:00:00.000Z",
     "1.7.1-beta": "2022-03-01T00:00:00.000Z",
     "2.2.1-next": "2023-03-01T00:00:00.000Z",
     "created": "2021-05-01T00:00:00.000Z",
@@ -446,6 +475,16 @@ Some versions(1) of package are blocked by rules: 1.7.0",
       "_id": "@testaccio/test@1.4.2",
       "dist": Object {
         "tarball": "https://registry.npmjs.org/@testaccio/test/-/testaccio-test-1.4.2.tgz",
+      },
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+    "1.4.4-beta": Object {
+      "_id": "@testaccio/test@1.4.4-beta",
+      "dist": Object {
+        "tarball": "https://registry.npmjs.org/@testaccio/test/-/testaccio-test-1.4.4-beta.tgz",
       },
       "main": "",
       "name": "",

@@ -70,6 +70,9 @@ const testaccioPackage: Package = {
     'testaccio-test-1.4.2.tgz': {
       url: 'https://registry.npmjs.org/@testaccio/test/-/testaccio-test-1.4.2.tgz',
     } as DistFile,
+    'testaccio-test-1.4.4-beta.tgz': {
+      url: 'https://registry.npmjs.org/@testaccio/test/-/testaccio-test-1.4.4-beta.tgz',
+    } as DistFile,
     'testaccio-test-1.7.0.tgz': {
       url: 'https://registry.npmjs.org/@testaccio/test/-/testaccio-test-1.7.0.tgz',
     } as DistFile,
@@ -88,6 +91,11 @@ const testaccioPackage: Package = {
       ...versionStub,
       _id: '@testaccio/test@1.4.2',
       dist: { tarball: 'https://registry.npmjs.org/@testaccio/test/-/testaccio-test-1.4.2.tgz' } as Dist,
+    },
+    '1.4.4-beta': {
+      ...versionStub,
+      _id: '@testaccio/test@1.4.4-beta',
+      dist: { tarball: 'https://registry.npmjs.org/@testaccio/test/-/testaccio-test-1.4.4-beta.tgz' } as Dist,
     },
     '1.7.0': {
       ...versionStub,
@@ -109,6 +117,7 @@ const testaccioPackage: Package = {
     modified: '2023-03-01T00:00:00.000Z',
     created: '2021-05-01T00:00:00.000Z',
     '1.4.2': '2021-05-01T00:00:00.000Z',
+    '1.4.4-beta': '2021-06-01T00:00:00.000Z',
     '1.7.0': '2022-02-01T00:00:00.000Z',
     '1.7.1-beta': '2022-03-01T00:00:00.000Z',
     '2.2.1-next': '2023-03-01T00:00:00.000Z',
@@ -290,14 +299,14 @@ describe('VerdaccioMiddlewarePlugin', () => {
   });
 
   describe('manifest cleanup', () => {
-    test('latest tag is set to a version with no other tags', async function() {
+    test('latest tag is set to a latest stable version', async function() {
       const config = {
         block: [{ package: '@testaccio/test', versions: '1.7.0' }],
       } as CustomConfig; // Some properties are omitted on purpose
       const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
 
       // Should block '1.7.0' version of @testaccio/test
-      // Should set 'latest' to '1.4.2'
+      // Should set 'latest' to '1.4.2', not to '1.4.4-beta' despite it is untagged
       expect(await plugin.filter_metadata(testaccioPackage)).toMatchSnapshot();
     });
 
