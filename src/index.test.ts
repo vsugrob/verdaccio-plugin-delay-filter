@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals';
-import { Logger, Package, Version } from '@verdaccio/types';
+import { Dist, DistFile, Logger, Package, Version } from '@verdaccio/types';
 
 import { CustomConfig } from './types';
 
@@ -64,15 +64,44 @@ const testaccioPackage: Package = {
     next: '2.2.1-next',
   },
   _attachments: {},
-  _distfiles: {},
+  _distfiles: {
+    'testaccio-test-1.4.2.tgz': {
+      url: 'https://registry.npmjs.org/@testaccio/test/-/testaccio-test-1.4.2.tgz',
+    } as DistFile,
+    'testaccio-test-1.7.0.tgz': {
+      url: 'https://registry.npmjs.org/@testaccio/test/-/testaccio-test-1.7.0.tgz',
+    } as DistFile,
+    'testaccio-test-1.7.1-beta.tgz': {
+      url: 'https://registry.npmjs.org/@testaccio/test/-/testaccio-test-1.7.1-beta.tgz',
+    } as DistFile,
+    'testaccio-test-2.2.1-next.tgz': {
+      url: 'https://registry.npmjs.org/@testaccio/test/-/testaccio-test-2.2.1-next.tgz',
+    } as DistFile,
+  },
   _rev: '',
   _uplinks: {},
   name: '@testaccio/test',
   versions: {
-    '1.4.2': { ...versionStub, _id: '@testaccio/test@1.4.2' },
-    '1.7.0': { ...versionStub, _id: '@testaccio/test@1.7.0' },
-    '1.7.1-beta': { ...versionStub, _id: '@testaccio/test@1.7.1-beta' },
-    '2.2.1-next': { ...versionStub, _id: '@testaccio/test@2.2.1-next' },
+    '1.4.2': {
+      ...versionStub,
+      _id: '@testaccio/test@1.4.2',
+      dist: { tarball: 'https://registry.npmjs.org/@testaccio/test/-/testaccio-test-1.4.2.tgz' } as Dist,
+    },
+    '1.7.0': {
+      ...versionStub,
+      _id: '@testaccio/test@1.7.0',
+      dist: { tarball: 'https://registry.npmjs.org/@testaccio/test/-/testaccio-test-1.7.0.tgz' } as Dist,
+    },
+    '1.7.1-beta': {
+      ...versionStub,
+      _id: '@testaccio/test@1.7.1-beta',
+      dist: { tarball: 'https://registry.npmjs.org/@testaccio/test/-/testaccio-test-1.7.1-beta.tgz' } as Dist,
+    },
+    '2.2.1-next': {
+      ...versionStub,
+      _id: '@testaccio/test@2.2.1-next',
+      dist: { tarball: 'https://registry.npmjs.org/@testaccio/test/-/testaccio-test-2.2.1-next.tgz' } as Dist,
+    },
   },
   time: {
     modified: '2023-03-01T00:00:00.000Z',
@@ -267,6 +296,17 @@ describe('VerdaccioMiddlewarePlugin', () => {
 
       // Should block '1.7.0' version of @testaccio/test
       // Should set 'latest' to '1.4.2'
+      expect(await plugin.filter_metadata(testaccioPackage)).toMatchSnapshot();
+    });
+
+    test('_distfiles are cleaned', async function() {
+      const config = {
+        block: [{ package: '@testaccio/test', versions: '1.7.0' }],
+      } as CustomConfig; // Some properties are omitted on purpose
+      const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
+
+      // Should block '1.7.0' version of @testaccio/test
+      // Should clean _distfiles['testaccio-test-1.7.0.tgz']
       expect(await plugin.filter_metadata(testaccioPackage)).toMatchSnapshot();
     });
   });

@@ -9,7 +9,8 @@
   See whether there are other parts of `package.json` are in need of cleaning.
   UPD: yes, `_distfiles` needs to be cleaned. An no, it appears that no other part needs to be cleaned.
   - ✅ Clean `_distfiles`.
-  - 🔴 Test `_distfiles` are cleaned.
+  - ✅ Test `_distfiles` are cleaned.
+  - 🔴 Test filter supports manifests with no `_distfiles`.
 - ✅ Add `minAgeDays` configuration option.
   - ✅ Implement filtering based on age.
   - ✅ Add unit test for this option.
