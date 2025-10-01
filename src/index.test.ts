@@ -13,6 +13,8 @@ const versionStub: Version = {
   version: '',
 } as Version; // Some properties are omitted on purpose
 
+const emptyPackage: Package = {} as Package;
+
 const babelTestPackage: Package = {
   'dist-tags': { latest: '3.0.0' },
   _attachments: {},
@@ -312,6 +314,16 @@ describe('VerdaccioMiddlewarePlugin', () => {
   });
 
   describe('manifest validity', () => {
+    test('empty package does not break the plugin', async function() {
+      const config = {
+        block: [{ package: 'some-package', versions: '7.7.7' }],
+      } as CustomConfig; // Some properties are omitted on purpose
+      const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
+
+      // It's unlikely that Verdaccio will call this method with an empty package, but just in case
+      expect(await plugin.filter_metadata(emptyPackage)).toMatchSnapshot();
+    });
+
     test('_distfiles presence is not required', async function() {
       const config = {
         block: [{ package: '@testaccio/test', versions: '1.7.0' }],

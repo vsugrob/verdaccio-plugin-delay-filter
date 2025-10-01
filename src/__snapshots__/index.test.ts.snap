@@ -476,6 +476,16 @@ Some versions(1) of package are blocked by rules: 1.7.0",
 }
 `;
 
+exports[`VerdaccioMiddlewarePlugin manifest validity empty package does not break the plugin 1`] = `
+Object {
+  "_distfiles": Object {},
+  "dist-tags": Object {},
+  "name": "",
+  "time": Object {},
+  "versions": Object {},
+}
+`;
+
 exports[`VerdaccioMiddlewarePlugin package and version filtering filters by multiple versions 1`] = `
 Object {
   "_attachments": Object {},
