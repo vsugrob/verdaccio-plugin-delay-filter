@@ -1,4 +1,4 @@
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, test } from '@jest/globals';
 import { Logger, Package, Version } from '@verdaccio/types';
 
 import { CustomConfig } from './types';
@@ -109,7 +109,7 @@ function getDaysSince(date: Date | string): number {
 
 describe('VerdaccioMiddlewarePlugin', () => {
   describe('date filtering', () => {
-    it('filters by minAgeDays', async function() {
+    test('filters by minAgeDays', async function() {
       const config = {
         minAgeDays: getDaysSince('2023'),
       } as CustomConfig; // Some properties are omitted on purpose
@@ -122,7 +122,7 @@ describe('VerdaccioMiddlewarePlugin', () => {
       expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
     });
 
-    it('filters by dateThreshold', async function() {
+    test('filters by dateThreshold', async function() {
       const config = {
         dateThreshold: '2023-01-01',
       } as CustomConfig; // Some properties are omitted on purpose
@@ -136,7 +136,7 @@ describe('VerdaccioMiddlewarePlugin', () => {
     });
 
     describe('dateThreshold combined with minAgeDays', () => {
-      it("filters by minAgeDays when it's earlier than dateThreshold", async function() {
+      test("filters by minAgeDays when it's earlier than dateThreshold", async function() {
         const config = {
           minAgeDays: getDaysSince('2023-01-01'),
           dateThreshold: '2024-06-01',
@@ -150,7 +150,7 @@ describe('VerdaccioMiddlewarePlugin', () => {
         expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
       });
 
-      it("filters by dateThreshold when it's earlier than minAgeDays", async function() {
+      test("filters by dateThreshold when it's earlier than minAgeDays", async function() {
         const config = {
           minAgeDays: getDaysSince('2024-06-01'),
           dateThreshold: '2023-01-01',
@@ -167,7 +167,7 @@ describe('VerdaccioMiddlewarePlugin', () => {
   });
 
   describe('package and version filtering', () => {
-    it('filters by scope', async function() {
+    test('filters by scope', async function() {
       const config = {
         block: [{ scope: '@babel' }],
       } as CustomConfig; // Some properties are omitted on purpose
@@ -180,7 +180,7 @@ describe('VerdaccioMiddlewarePlugin', () => {
       expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
     });
 
-    it('filters by package', async function() {
+    test('filters by package', async function() {
       const config = {
         block: [{ package: '@babel/test' }],
       } as CustomConfig; // Some properties are omitted on purpose
@@ -193,7 +193,7 @@ describe('VerdaccioMiddlewarePlugin', () => {
       expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
     });
 
-    it('filters by versions', async function() {
+    test('filters by versions', async function() {
       const config = {
         block: [{ package: '@babel/test', versions: '>1.0.0' }],
       } as CustomConfig; // Some properties are omitted on purpose
@@ -206,7 +206,7 @@ describe('VerdaccioMiddlewarePlugin', () => {
       expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
     });
 
-    it('filters by multiple versions', async function() {
+    test('filters by multiple versions', async function() {
       const config = {
         block: [
           { package: '@babel/test', versions: '>2.0.0' },
@@ -222,7 +222,7 @@ describe('VerdaccioMiddlewarePlugin', () => {
       expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
     });
 
-    it('replaces versions', async function() {
+    test('replaces versions', async function() {
       const config = {
         block: [{ package: '@babel/test', versions: '>1.0.0', strategy: 'replace' }],
       } as CustomConfig; // Some properties are omitted on purpose
@@ -236,7 +236,7 @@ describe('VerdaccioMiddlewarePlugin', () => {
     });
 
     describe('readme stays intact when no filtering applied', () => {
-      it('filter by versions', async function() {
+      test('filter by versions', async function() {
         const config = {
           block: [{ package: '@babel/test', versions: '>10.0.0' }],
         } as CustomConfig; // Some properties are omitted on purpose
@@ -246,7 +246,7 @@ describe('VerdaccioMiddlewarePlugin', () => {
         expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
       });
 
-      it('version replacement', async function() {
+      test('version replacement', async function() {
         const config = {
           block: [{ package: '@babel/test', versions: '>10.0.0', strategy: 'replace' }],
         } as CustomConfig; // Some properties are omitted on purpose
@@ -259,7 +259,7 @@ describe('VerdaccioMiddlewarePlugin', () => {
   });
 
   describe('manifest cleanup', () => {
-    it('latest tag is set to a version with no other tags', async function() {
+    test('latest tag is set to a version with no other tags', async function() {
       const config = {
         block: [{ package: '@testaccio/test', versions: '1.7.0' }],
       } as CustomConfig; // Some properties are omitted on purpose
