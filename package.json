@@ -1,6 +1,6 @@
 {
   "name": "verdaccio-plugin-delay-filter",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "Plugin for filtering packages in verdaccio, returning only the versions that were published N days ago. It reduces risk of being infected with 0-day or 1-day attacks with package updates which are not vetted by community.",
   "main": "lib/index.js",
   "types": "lib/src/index.d.ts",
