@@ -57,6 +57,34 @@ const typesNodePackage: Package = {
   readme: 'It is a types node package',
 };
 
+const testaccioPackage: Package = {
+  'dist-tags': {
+    latest: '1.7.0',
+    beta: '1.7.1-beta',
+    next: '2.2.1-next',
+  },
+  _attachments: {},
+  _distfiles: {},
+  _rev: '',
+  _uplinks: {},
+  name: '@testaccio/test',
+  versions: {
+    '1.4.2': { ...versionStub, _id: '@testaccio/test@1.4.2' },
+    '1.7.0': { ...versionStub, _id: '@testaccio/test@1.7.0' },
+    '1.7.1-beta': { ...versionStub, _id: '@testaccio/test@1.7.1-beta' },
+    '2.2.1-next': { ...versionStub, _id: '@testaccio/test@2.2.1-next' },
+  },
+  time: {
+    modified: '2023-03-01T00:00:00.000Z',
+    created: '2021-05-01T00:00:00.000Z',
+    '1.4.2': '2021-05-01T00:00:00.000Z',
+    '1.7.0': '2022-02-01T00:00:00.000Z',
+    '1.7.1-beta': '2022-03-01T00:00:00.000Z',
+    '2.2.1-next': '2023-03-01T00:00:00.000Z',
+  },
+  readme: 'It is a testaccio test package',
+};
+
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = (): void => {};
 const logger: Logger = {
@@ -227,6 +255,19 @@ describe('VerdaccioMiddlewarePlugin', () => {
         // Should not change anything
         expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
       });
+    });
+  });
+
+  describe('manifest cleanup', () => {
+    it('latest tag is set to a version with no other tags', async function() {
+      const config = {
+        block: [{ package: '@testaccio/test', versions: '1.7.0' }],
+      } as CustomConfig; // Some properties are omitted on purpose
+      const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
+
+      // Should block '1.7.0' version of @testaccio/test
+      // Should set 'latest' to '1.4.2'
+      expect(await plugin.filter_metadata(testaccioPackage)).toMatchSnapshot();
     });
   });
 });
