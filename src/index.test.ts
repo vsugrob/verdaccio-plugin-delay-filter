@@ -310,4 +310,22 @@ describe('VerdaccioMiddlewarePlugin', () => {
       expect(await plugin.filter_metadata(testaccioPackage)).toMatchSnapshot();
     });
   });
+
+  describe('manifest validity', () => {
+    test('_distfiles presence is not required', async function() {
+      const config = {
+        block: [{ package: '@testaccio/test', versions: '1.7.0' }],
+      } as CustomConfig; // Some properties are omitted on purpose
+      const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
+
+      // Should block '1.7.0' version of @testaccio/test
+      // Should behave as if _distfiles were set to an empty object
+      let packageWithNoDistFiles = { ...testaccioPackage } as { [key: string]: unknown };
+      delete packageWithNoDistFiles._distfiles;
+
+      // '_distfiles' may or may not be present in the package manifest,
+      // it's a common thing when fetching data from a registry
+      expect(await plugin.filter_metadata((packageWithNoDistFiles as unknown) as Package)).toMatchSnapshot();
+    });
+  });
 });
