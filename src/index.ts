@@ -111,6 +111,7 @@ function cleanupDistFiles(newPackage: Package) {
 function getPackageClone(packageInfo: Readonly<Package>): Package {
   return {
     ...packageInfo,
+    name: packageInfo.name ?? '',
     versions: {
       ...packageInfo.versions,
     },
