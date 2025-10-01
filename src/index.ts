@@ -50,18 +50,24 @@ function cleanupTime(packageInfo: Package): void {
 }
 
 function setupLatestTag(packageInfo: Package): void {
+  const distTags = packageInfo['dist-tags'];
+  if (distTags.latest) {
+    // Tag 'latest' must only be fixed when latest version was blocked
+    return;
+  }
+
   const versions = Object.keys(packageInfo.versions);
   if (versions.length === 0) {
     return;
   }
 
-  const validVersions = versions.filter((v) => semver.valid(v));
-  if (validVersions.length === 0) {
+  const untaggedVersions = versions.filter((v) => semver.valid(v) && Object.values(distTags).indexOf(v) === -1);
+  if (untaggedVersions.length === 0) {
     return;
   }
 
-  const sortedVersions = validVersions.sort(semver.rcompare);
-  packageInfo['dist-tags'].latest = sortedVersions[0];
+  const sortedVersions = untaggedVersions.sort(semver.rcompare);
+  distTags.latest = sortedVersions[0];
 }
 
 function setupCreatedAndModified(packageInfo: Package): void {

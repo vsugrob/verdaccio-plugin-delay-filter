@@ -1,3 +1,12 @@
+- ✅ Check whether `setupLatestTag()` needs to find latest version in non-next versions.
+  UPD: yes, current logic is not entirely right.
+  Tag 'latest' must be set to a version that has no other tags associated with it.
+- 🔴 Fix `setupLatestTag()` logic:
+  - ✅ Modify `dist-tags/latest` only if it was removed by `cleanupTags()` earlier.
+  - ✅ Make it set `dist-tags/latest` to a version that has no tags associated with it.
+  - 🔴 Add unit tests.
+- 🔴 Investigate whether `_attachments` and `_distfiles` needs to be cleaned.
+  See whether there are other parts of `package.json` are in need of cleaning.
 - ✅ Add `minAgeDays` configuration option.
   - ✅ Implement filtering based on age.
   - ✅ Add unit test for this option.
