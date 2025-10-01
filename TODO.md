@@ -6,8 +6,8 @@
   - ✅ Make it set `dist-tags/latest` to a version that has no tags associated with it.
   - ✅ Add unit tests.
 - 🔴 Fix `setupLatestTag()` logic again:
-  - 🔴 Investigate why it may assign not the most recent release to be a latest.
-  - 🔴 Make it pick version which is not suffixed with "-next" or "-beta" or whatever in the first pass.
+  - ✅ Investigate why it may assign not the most recent release to be a latest.
+  - ✅ Make it pick version which is not suffixed with "-next" or "-beta" or whatever in the first pass.
     If it fails, fall back to standard algorithm.
   - 🔴 Add/modify unit tests.
 - ✅ Investigate whether `_attachments` and `_distfiles` needs to be cleaned.

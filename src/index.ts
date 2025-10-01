@@ -71,26 +71,44 @@ function setupLatestTag(packageInfo: Package): void {
     return;
   }
 
-  const time = packageInfo.time;
-  if (!time) {
-    const sortedVersions = untaggedVersions.sort(semver.rcompare);
-    distTags.latest = sortedVersions[0];
+  // Try stable versions first (no "-next" or "-beta", etc.)
+  const stableVersions = untaggedVersions.filter((v) => !semver.prerelease(v));
+  const latestStableVersion = getLatestVersion(packageInfo, stableVersions);
+  if (latestStableVersion) {
+    distTags.latest = latestStableVersion;
     return;
   }
 
-  const versionWithTime = untaggedVersions
+  // Fallback to all versions
+  const latestVersion = getLatestVersion(packageInfo, untaggedVersions);
+  if (!latestVersion) {
+    return;
+  }
+
+  distTags.latest = latestVersion;
+}
+
+function getLatestVersion(packageInfo: Package, versions: string[]): string | undefined {
+  const time = packageInfo.time;
+  if (!time) {
+    // No time information, it's the best we can do
+    const sortedVersions = versions.sort(semver.rcompare);
+    return sortedVersions[0];
+  }
+
+  const timedVersions = versions
     .map((v) => ({
       version: v,
       time: time[v],
     }))
     .filter((v) => v.time);
 
-  if (versionWithTime.length === 0) {
-    return;
+  if (timedVersions.length === 0) {
+    return undefined;
   }
 
-  const timeOrderedVersions = versionWithTime.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
-  distTags.latest = timeOrderedVersions[0].version;
+  const timeOrderedVersions = timedVersions.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
+  return timeOrderedVersions[0].version;
 }
 
 /**
