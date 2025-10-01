@@ -44,7 +44,7 @@ function cleanupTime(packageInfo: Package): void {
     return;
   }
 
-  Object.entries(time).forEach(([version, _]) => {
+  Object.keys(time).forEach((version) => {
     if (!packageInfo.versions[version]) {
       delete time[version];
     }
@@ -94,6 +94,20 @@ function setupCreatedAndModified(packageInfo: Package): void {
   time['modified'] = sortedTimes[sortedTimes.length - 1];
 }
 
+/**
+ * Remove distfiles that are not used by any version
+ */
+function cleanupDistFiles(newPackage: Package) {
+  const distFiles = newPackage._distfiles;
+  Object.entries(distFiles).forEach(([key, file]) => {
+    const fileUrl = file.url;
+    const versionPointingToFile = Object.values(newPackage.versions).find((v) => v.dist.tarball === fileUrl);
+    if (!versionPointingToFile) {
+      delete distFiles[key];
+    }
+  });
+}
+
 function getPackageClone(packageInfo: Readonly<Package>): Package {
   return {
     ...packageInfo,
@@ -105,6 +119,9 @@ function getPackageClone(packageInfo: Readonly<Package>): Package {
     },
     time: {
       ...packageInfo.time,
+    },
+    _distfiles: {
+      ...packageInfo._distfiles,
     },
   };
 }
@@ -409,6 +426,7 @@ export default class VerdaccioMiddlewarePlugin implements IPluginStorageFilter<C
     setupLatestTag(newPackage);
     cleanupTime(newPackage);
     setupCreatedAndModified(newPackage);
+    cleanupDistFiles(newPackage);
     return Promise.resolve(newPackage);
   }
 }
