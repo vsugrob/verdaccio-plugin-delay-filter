@@ -9,9 +9,22 @@ Plugin for filtering packages and their versions with security purposes. It allo
 - entire packages or even scopes
 - versions released after specific date
 
-Verdaccio configured with this filter allows you to shield yourself against supply chain attacks in popular packages. The most prominent recent attack (Shai-Hulud worm) demonstrated how vulnerable npmjs and public registries are in general. Packages are uploaded without being audited by cybersecurity specialists and any maintainer can be hacked or go rogue and upload malicious code which will be automatically downloaded to your machine upon executing npm install. You can manually restrict direct dependencies of your package to specific versions and think you're protected against such threats, but it's not true since indirect dependecies are most often configured as "download _this_ version or newer" (^1.2.3 format with "^") and there is no way to lock it for new packages which you have no package-lock.json for. It's way better to make npm/pnpm/yarn see only want you want them to see with Verdaccio in conjunction with filtering plugin.
+Verdaccio configured with this filter allows you to shield yourself against supply chain attacks in popular packages. The most prominent recent attack (Shai-Hulud worm) demonstrated how vulnerable npmjs and public registries are in general. Packages are uploaded without being audited by cybersecurity specialists and any maintainer can be hacked or go rogue and upload malicious code which will be automatically downloaded to your machine upon executing npm install. You can manually restrict direct dependencies of your package to specific versions and think you're protected against such threats, but it's not true since indirect dependecies are most often configured as "download _this_ version or newer" (^1.2.3 format with "^") and there is no way to lock it for new packages which you have no package-lock.json for. It's way better to make npm/pnpm/yarn/npx/pnpx and etc see only want you want them to see with Verdaccio in conjunction with filtering plugin. Note that you have to configure these tools to fetch data from your proxy instead of npmjs registry, e.g. with `npm config set registry http://localhost:4873/` where http://localhost:4873/ is an address of your Verdaccio server.
 
 Age-based filtering can protect you at a great degree against threats in popular packages. Community and security firms are quite active in detecting malicious code and usually it takes up to several days for infected versions to be unpublished.
+
+## What this plugin do
+
+It transforms package manifests to make your private registry proxy serve only package versions that satisfy predefined filtering rules.
+
+### How it transforms package manifest
+
+- Removes blocked versions from the `versions` map.
+- Removes tags for blocked version from `dist-tags`.
+- Sets `dist-tags.latest` to most recent untagged version that survived filtering.
+- Removes `time` entries corresponding to blocked versions.
+- Fixed `created` and `modified` fields of `time`.
+- Removes no longer relevant files from `_distfiles`.
 
 ---
 
