@@ -10,5 +10,5 @@
     "esModuleInterop": true,
     "typeRoots": ["../../node_modules/@verdaccio/types/lib/verdaccio", "../../node_modules/@types"]
   },
-  "include": ["src/*.ts"]
+  "include": ["src/**/*.ts"]
 }
