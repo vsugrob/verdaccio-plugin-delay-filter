@@ -1,6 +1,6 @@
 # verdaccio-plugin-delay-filter
 
-> **⚠️ Warning:** this plugin works reliably only with Verdaccio 6.2.0. In some of the earlier versions it won't load. In the 8.0.0-next-8.23 version of Verdaccio filtering is not consistent and it will not shield you against unwanted packages! Please use Verdaccio 6.2.0 if you want filtering to be applied correctly.
+> **⚠️ Warning:** this plugin works reliably only with Verdaccio starting from version 6.2.0. In some of the earlier versions it won't load or might provide inconsistent results across requests.
 
 Plugin for filtering packages and their versions with security purposes. It allows you to make Verdaccio block:
 
@@ -21,7 +21,7 @@ It transforms package manifests to make your private registry proxy serve only p
 
 - Removes blocked versions from the `versions` map.
 - Removes tags for blocked version from `dist-tags`.
-- Sets `dist-tags.latest` to most recent untagged version that survived filtering.
+- Sets `dist-tags.latest` to most recent stable version that survived filtering.
 - Removes `time` entries corresponding to blocked versions.
 - Fixed `created` and `modified` fields of `time`.
 - Removes no longer relevant files from `_distfiles`.
@@ -48,14 +48,18 @@ filters:
     minAgeDays: 30 # Block versions younger than 30 days
 ```
 
+Note that this option is global for all packages and scopes.
+If you want some scopes, packages or package version to survive this filtering,
+seek for `allow` rules later in this document.
+
 #### Block by scope or package
 
 ```yaml
 filters:
   plugin-delay-filter:
     block:
-      - scope: @evil # block all packages in scope
-      - package: semvver # block a malicious package
+      - scope: @evilscope # block all packages in this scope
+      - package: semvver # block a malicious package trying to pretend 'semver'
       - package: @coolauthor/stolen # block a malicious package
 ```
 
@@ -87,12 +91,33 @@ filters:
 
 #### dateThreshold
 
-Add this if you want to exclude package versions that were published after march 10, 2022.
+```yaml
+filters:
+  plugin-delay-filter:
+    dateThreshold: '2022-03-10T23:00:00.000Z' # Allow only packages released up to this date
+```
+
+#### Whitelisting blocked packages
+
+In some cases, you may need to bypass your own rules
+and whitelist certain scopes, packages, or package versions
+even though they fall within a blocked area.
+For example, this might happen when you own some private registry or you really need
+latest version of some package and you ensured that its code is safe.
+You can configure whitelist rules with `allow` clause,
+which follows the same rules as `block`.
+Rules specified in `allow` take precedence over all blocking rules
+(even `minAgeDays` and `dateThreshold`).
 
 ```yaml
 filters:
   plugin-delay-filter:
-    dateThreshold: '2022-03-10T23:00:00.000Z'
+    minAgeDays: 30 # Block versions younger than 30 days
+    allow:
+      - scope: @my-company-scope # Don't block the scope that belongs to you
+      - package: @coolauthor/not-stolen # Don't block package you really trust
+      - package: semver
+        versions: '7.7.3' # Don't block specific package version that you know is not malicious
 ```
 
 ## Development
