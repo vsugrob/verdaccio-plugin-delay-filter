@@ -508,6 +508,59 @@ describe('VerdaccioMiddlewarePlugin', () => {
         expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
       });
     });
+
+    describe('block by version', () => {
+      test('allow by scope', async function() {
+        const config = {
+          block: [
+            { package: '@babel/test', versions: '>=1.5.0' },
+            { package: '@types/node', versions: '>=2.2.0' },
+          ],
+          allow: [{ scope: '@babel' }],
+        } as CustomConfig; // Some properties are omitted on purpose
+        const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
+
+        // Should unblock all versions of @babel
+        expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
+
+        // Should not unblock @types/node
+        expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
+      });
+
+      test('allow by package', async function() {
+        const config = {
+          block: [
+            { package: '@babel/test', versions: '>=1.5.0' },
+            { package: '@types/node', versions: '>=2.2.0' },
+          ],
+          allow: [{ package: '@babel/test' }],
+        } as CustomConfig; // Some properties are omitted on purpose
+        const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
+
+        // Should unblock all versions of @babel/test
+        expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
+
+        // Should not unblock @types/node
+        expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
+      });
+
+      test('allow by versions', async function() {
+        const config = {
+          block: [
+            { package: '@babel/test', versions: '>=1.5.0' },
+            { package: '@types/node', versions: '>=2.2.0' },
+          ],
+          allow: [{ package: '@babel/test', versions: '3.0.0' }],
+        } as CustomConfig; // Some properties are omitted on purpose
+        const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
+
+        // Should unblock version 3.0.0 of @babel/test
+        expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
+
+        // Should not unblock @types/node
+        expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
+      });
+    });
   });
 
   describe('manifest cleanup', () => {
