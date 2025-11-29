@@ -1,6 +1,6 @@
 import { Range } from 'semver';
 
-import { ConfigRule, ParsedRule } from './types';
+import { ConfigRule, CustomConfig, ParsedConfig, ParsedRule } from './types';
 
 export function parseConfigRules(configRules: ConfigRule[]): Map<string, ParsedRule> {
   const ruleMap = new Map<string, ParsedRule>();
@@ -40,4 +40,31 @@ export function parseConfigRules(configRules: ConfigRule[]): Map<string, ParsedR
   }
 
   return ruleMap;
+}
+
+export function parseConfig(config: CustomConfig): ParsedConfig {
+  const blockMap = parseConfigRules(config.block ?? []);
+  const allowMap = parseConfigRules(config.allow ?? []);
+  const dateThreshold = config.dateThreshold ? new Date(config.dateThreshold) : null;
+  if (dateThreshold && isNaN(dateThreshold.getTime())) {
+    throw new TypeError(`Invalid date ${config.dateThreshold} was provided for dateThreshold`);
+  }
+
+  const minAgeDays = config.minAgeDays ? Number(config.minAgeDays) : null;
+  let minAgeMs: number | null = null;
+  if (minAgeDays !== null) {
+    if (isNaN(minAgeDays) || minAgeDays < 0) {
+      throw new TypeError(`Invalid number ${config.minAgeDays} was provided for minAgeDays`);
+    }
+
+    minAgeMs = minAgeDays * 24 * 60 * 60 * 1000;
+  }
+
+  return {
+    ...config,
+    dateThreshold,
+    minAgeMs,
+    block: blockMap,
+    allow: allowMap,
+  };
 }

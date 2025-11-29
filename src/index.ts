@@ -2,7 +2,7 @@
 import { IPluginStorageFilter, Logger, Package, PluginOptions } from '@verdaccio/types';
 import semver, { satisfies } from 'semver';
 
-import { parseConfigRules } from './config/parser';
+import { parseConfig } from './config/parser';
 import { CustomConfig, ParsedConfig, ParsedRule } from './config/types';
 
 /**
@@ -342,31 +342,7 @@ export default class VerdaccioMiddlewarePlugin implements IPluginStorageFilter<C
   public constructor(config: CustomConfig, options: PluginOptions<CustomConfig>) {
     this.config = config;
     this.logger = options.logger;
-
-    const blockMap = parseConfigRules(config.block ?? []);
-    const allowMap = parseConfigRules(config.allow ?? []);
-    const dateThreshold = config.dateThreshold ? new Date(config.dateThreshold) : null;
-    if (dateThreshold && isNaN(dateThreshold.getTime())) {
-      throw new TypeError(`Invalid date ${config.dateThreshold} was provided for dateThreshold`);
-    }
-
-    const minAgeDays = config.minAgeDays ? Number(config.minAgeDays) : null;
-    let minAgeMs: number | null = null;
-    if (minAgeDays !== null) {
-      if (isNaN(minAgeDays) || minAgeDays < 0) {
-        throw new TypeError(`Invalid number ${config.minAgeDays} was provided for minAgeDays`);
-      }
-
-      minAgeMs = minAgeDays * 24 * 60 * 60 * 1000;
-    }
-
-    this.parsedConfig = {
-      ...config,
-      dateThreshold,
-      minAgeMs,
-      block: blockMap,
-      allow: allowMap,
-    };
+    this.parsedConfig = parseConfig(config);
 
     options.logger.debug(
       `Loaded plugin-delay-filter, ${JSON.stringify(this.parsedConfig, null, 4)}, ${Array.from(
