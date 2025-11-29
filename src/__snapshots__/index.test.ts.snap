@@ -963,3 +963,315 @@ Object {
   },
 }
 `;
+
+exports[`VerdaccioMiddlewarePlugin whitelist block by minAgeDays allow by package 1`] = `
+Object {
+  "_attachments": Object {},
+  "_distfiles": Object {},
+  "_rev": "",
+  "_uplinks": Object {},
+  "dist-tags": Object {
+    "latest": "3.0.0",
+  },
+  "name": "@babel/test",
+  "readme": "It is a babel test package",
+  "time": Object {
+    "1.0.0": "2020-01-01T00:00:00.000Z",
+    "1.5.0": "2022-01-01T00:00:00.000Z",
+    "3.0.0": "2024-01-01T00:00:00.000Z",
+    "created": "2020-01-01T00:00:00.000Z",
+    "modified": "2024-01-01T00:00:00.000Z",
+  },
+  "versions": Object {
+    "1.0.0": Object {
+      "_id": "@babel/test@1.0.0",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+    "1.5.0": Object {
+      "_id": "@babel/test@1.5.0",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+    "3.0.0": Object {
+      "_id": "@babel/test@3.0.0",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+  },
+}
+`;
+
+exports[`VerdaccioMiddlewarePlugin whitelist block by minAgeDays allow by package 2`] = `
+Object {
+  "_attachments": Object {},
+  "_distfiles": Object {},
+  "_rev": "",
+  "_uplinks": Object {},
+  "dist-tags": Object {
+    "latest": "2.2.0",
+  },
+  "name": "@types/node",
+  "readme": "It is a types node package",
+  "time": Object {
+    "1.0.0": "2010-01-01T00:00:00.000Z",
+    "2.2.0": "2015-01-01T00:00:00.000Z",
+    "created": "2010-01-01T00:00:00.000Z",
+    "modified": "2015-01-01T00:00:00.000Z",
+  },
+  "versions": Object {
+    "1.0.0": Object {
+      "_id": "@types/node@1.0.0",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+    "2.2.0": Object {
+      "_id": "@types/node@2.2.0",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+  },
+}
+`;
+
+exports[`VerdaccioMiddlewarePlugin whitelist block by minAgeDays allow by scope 1`] = `
+Object {
+  "_attachments": Object {},
+  "_distfiles": Object {},
+  "_rev": "",
+  "_uplinks": Object {},
+  "dist-tags": Object {
+    "latest": "3.0.0",
+  },
+  "name": "@babel/test",
+  "readme": "It is a babel test package",
+  "time": Object {
+    "1.0.0": "2020-01-01T00:00:00.000Z",
+    "1.5.0": "2022-01-01T00:00:00.000Z",
+    "3.0.0": "2024-01-01T00:00:00.000Z",
+    "created": "2020-01-01T00:00:00.000Z",
+    "modified": "2024-01-01T00:00:00.000Z",
+  },
+  "versions": Object {
+    "1.0.0": Object {
+      "_id": "@babel/test@1.0.0",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+    "1.5.0": Object {
+      "_id": "@babel/test@1.5.0",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+    "3.0.0": Object {
+      "_id": "@babel/test@3.0.0",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+  },
+}
+`;
+
+exports[`VerdaccioMiddlewarePlugin whitelist block by minAgeDays allow by scope 2`] = `
+Object {
+  "_attachments": Object {},
+  "_distfiles": Object {},
+  "_rev": "",
+  "_uplinks": Object {},
+  "dist-tags": Object {
+    "latest": "2.2.0",
+  },
+  "name": "@types/node",
+  "readme": "It is a types node package",
+  "time": Object {
+    "1.0.0": "2010-01-01T00:00:00.000Z",
+    "2.2.0": "2015-01-01T00:00:00.000Z",
+    "created": "2010-01-01T00:00:00.000Z",
+    "modified": "2015-01-01T00:00:00.000Z",
+  },
+  "versions": Object {
+    "1.0.0": Object {
+      "_id": "@types/node@1.0.0",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+    "2.2.0": Object {
+      "_id": "@types/node@2.2.0",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+  },
+}
+`;
+
+exports[`VerdaccioMiddlewarePlugin whitelist block by minAgeDays allow by version 1`] = `
+Object {
+  "_attachments": Object {},
+  "_distfiles": Object {},
+  "_rev": "",
+  "_uplinks": Object {},
+  "dist-tags": Object {
+    "latest": "3.0.0",
+  },
+  "name": "@babel/test",
+  "readme": "It is a babel test package",
+  "time": Object {
+    "1.0.0": "2020-01-01T00:00:00.000Z",
+    "3.0.0": "2024-01-01T00:00:00.000Z",
+    "created": "2020-01-01T00:00:00.000Z",
+    "modified": "2024-01-01T00:00:00.000Z",
+  },
+  "versions": Object {
+    "1.0.0": Object {
+      "_id": "@babel/test@1.0.0",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+    "3.0.0": Object {
+      "_id": "@babel/test@3.0.0",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+  },
+}
+`;
+
+exports[`VerdaccioMiddlewarePlugin whitelist block by minAgeDays allow by version 2`] = `
+Object {
+  "_attachments": Object {},
+  "_distfiles": Object {},
+  "_rev": "",
+  "_uplinks": Object {},
+  "dist-tags": Object {
+    "latest": "2.2.0",
+  },
+  "name": "@types/node",
+  "readme": "It is a types node package",
+  "time": Object {
+    "1.0.0": "2010-01-01T00:00:00.000Z",
+    "2.2.0": "2015-01-01T00:00:00.000Z",
+    "created": "2010-01-01T00:00:00.000Z",
+    "modified": "2015-01-01T00:00:00.000Z",
+  },
+  "versions": Object {
+    "1.0.0": Object {
+      "_id": "@types/node@1.0.0",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+    "2.2.0": Object {
+      "_id": "@types/node@2.2.0",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+  },
+}
+`;
+
+exports[`VerdaccioMiddlewarePlugin whitelist block by minAgeDays multiple allow rules 1`] = `
+Object {
+  "_attachments": Object {},
+  "_distfiles": Object {},
+  "_rev": "",
+  "_uplinks": Object {},
+  "dist-tags": Object {
+    "latest": "3.0.0",
+  },
+  "name": "@babel/test",
+  "readme": "It is a babel test package",
+  "time": Object {
+    "1.0.0": "2020-01-01T00:00:00.000Z",
+    "3.0.0": "2024-01-01T00:00:00.000Z",
+    "created": "2020-01-01T00:00:00.000Z",
+    "modified": "2024-01-01T00:00:00.000Z",
+  },
+  "versions": Object {
+    "1.0.0": Object {
+      "_id": "@babel/test@1.0.0",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+    "3.0.0": Object {
+      "_id": "@babel/test@3.0.0",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+  },
+}
+`;
+
+exports[`VerdaccioMiddlewarePlugin whitelist block by minAgeDays multiple allow rules 2`] = `
+Object {
+  "_attachments": Object {},
+  "_distfiles": Object {},
+  "_rev": "",
+  "_uplinks": Object {},
+  "dist-tags": Object {
+    "latest": "2.6.3",
+  },
+  "name": "@types/node",
+  "readme": "It is a types node package",
+  "time": Object {
+    "1.0.0": "2010-01-01T00:00:00.000Z",
+    "2.2.0": "2015-01-01T00:00:00.000Z",
+    "2.6.3": "2025-01-01T00:00:00.000Z",
+    "created": "2010-01-01T00:00:00.000Z",
+    "modified": "2025-01-01T00:00:00.000Z",
+  },
+  "versions": Object {
+    "1.0.0": Object {
+      "_id": "@types/node@1.0.0",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+    "2.2.0": Object {
+      "_id": "@types/node@2.2.0",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+    "2.6.3": Object {
+      "_id": "@types/node@2.6.3",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+  },
+}
+`;

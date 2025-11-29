@@ -298,6 +298,69 @@ describe('VerdaccioMiddlewarePlugin', () => {
     });
   });
 
+  describe('whitelist', () => {
+    describe('block by minAgeDays', () => {
+      test('allow by scope', async function() {
+        const config = {
+          minAgeDays: getDaysSince('2021'),
+          allow: [{ scope: '@babel' }],
+        } as CustomConfig; // Some properties are omitted on purpose
+        const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
+
+        // Should unblock all versions of @babel
+        expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
+
+        // Should not unblock @types. Version 2.6.3 should be blocked.
+        expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
+      });
+
+      test('allow by package', async function() {
+        const config = {
+          minAgeDays: getDaysSince('2021'),
+          allow: [{ package: '@babel/test' }],
+        } as CustomConfig; // Some properties are omitted on purpose
+        const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
+
+        // Should unblock all versions of @babel/test
+        expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
+
+        // Should not unblock @types. Version 2.6.3 should be blocked.
+        expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
+      });
+
+      test('allow by version', async function() {
+        const config = {
+          minAgeDays: getDaysSince('2021'),
+          allow: [{ package: '@babel/test', versions: '3.0.0' }],
+        } as CustomConfig; // Some properties are omitted on purpose
+        const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
+
+        // Should block 2.0.0 version of @babel/test and unblock 3.0.0
+        expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
+
+        // Should not unblock @types. Version 2.6.3 should be blocked.
+        expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
+      });
+
+      test('multiple allow rules', async function() {
+        const config = {
+          minAgeDays: getDaysSince('2021'),
+          allow: [
+            { package: '@babel/test', versions: '3.0.0' },
+            { package: '@types/node', versions: '>2.5.0' },
+          ],
+        } as CustomConfig; // Some properties are omitted on purpose
+        const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
+
+        // Should block 2.0.0 version of @babel/test and unblock 3.0.0
+        expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
+
+        // Version 2.6.3 should be unblocked
+        expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
+      });
+    });
+  });
+
   describe('manifest cleanup', () => {
     test('latest tag is set to a latest stable version', async function() {
       const config = {
