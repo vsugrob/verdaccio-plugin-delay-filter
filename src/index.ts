@@ -165,11 +165,11 @@ export default class VerdaccioMiddlewarePlugin implements IPluginStorageFilter<C
   }
 
   public async filter_metadata(packageInfo: Readonly<Package>): Promise<Package> {
-    const { dateThreshold, minAgeMs, block } = this.parsedConfig;
+    const { dateThreshold, minAgeMs, block, allow } = this.parsedConfig;
 
     let newPackage = getPackageClone(packageInfo);
     if (block.size > 0) {
-      newPackage = filterBlockedVersions(newPackage, block, this.logger);
+      newPackage = filterBlockedVersions(newPackage, block, allow, this.logger);
     }
 
     let earliestDateThreshold: Date | null = null;

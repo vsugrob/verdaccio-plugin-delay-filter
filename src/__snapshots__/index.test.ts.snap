@@ -606,7 +606,7 @@ Object {
   "_uplinks": Object {},
   "dist-tags": Object {},
   "name": "@babel/test",
-  "readme": "All package versions blocked by rule",
+  "readme": "All package versions are blocked by rule",
   "time": Object {},
   "versions": Object {},
 }
@@ -664,7 +664,7 @@ Object {
   "_uplinks": Object {},
   "dist-tags": Object {},
   "name": "@babel/test",
-  "readme": "All packages in scope @babel blocked by rule",
+  "readme": "All packages in scope @babel are blocked by rule",
   "time": Object {},
   "versions": Object {},
 }

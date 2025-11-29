@@ -6,22 +6,25 @@ export enum MatchType {
   VERSIONS = 'versions',
 }
 
-export interface MatchScopeResult {
+export interface MatchResultVersions {
+  versions: string[];
+}
+
+export interface MatchScopeResult extends MatchResultVersions {
   type: MatchType.SCOPE;
   rule: PackageScopeLevel;
   scope: string;
 }
 
-export interface MatchPackageResult {
+export interface MatchPackageResult extends MatchResultVersions {
   type: MatchType.PACKAGE;
   rule: PackageScopeLevel;
   package: string;
 }
 
-export interface MatchVersionsResult {
+export interface MatchVersionsResult extends MatchResultVersions {
   type: MatchType.VERSIONS;
   rule: ParsedConfigRule;
-  versions: string[];
 }
 
 export type MatchResult = MatchScopeResult | MatchPackageResult | MatchVersionsResult;

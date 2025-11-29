@@ -33,6 +33,7 @@ export function matchRules(packageInfo: Package, rules: Map<string, ParsedRule>)
         type: MatchType.SCOPE,
         rule,
         scope,
+        versions: Object.keys(packageInfo.versions),
       };
     }
   }
@@ -48,6 +49,7 @@ export function matchRules(packageInfo: Package, rules: Map<string, ParsedRule>)
       type: MatchType.PACKAGE,
       rule,
       package: packageInfo.name,
+      versions: Object.keys(packageInfo.versions),
     };
   }
 

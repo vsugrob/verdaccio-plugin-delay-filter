@@ -1,7 +1,7 @@
 import { Logger, Package } from '@verdaccio/types';
-import { satisfies } from 'semver';
+import { satisfies, Range } from 'semver';
 
-import { ParsedRule } from '../config/types';
+import { ParsedConfigRule, ParsedRule } from '../config/types';
 
 import { matchRules } from './matcher';
 import { MatchType } from './types';
@@ -10,59 +10,67 @@ import { MatchType } from './types';
  * Filter out all blocked package versions.
  * If all package is blocked, or it's scope is blocked - block all versions.
  */
-export function filterBlockedVersions(packageInfo: Package, rules: Map<string, ParsedRule>, logger: Logger): Package {
-  const match = matchRules(packageInfo, rules);
-  if (!match) {
+export function filterBlockedVersions(
+  packageInfo: Package,
+  blockRules: Map<string, ParsedRule>,
+  allowRules: Map<string, ParsedRule>,
+  logger: Logger
+): Package {
+  const allowMatch = matchRules(packageInfo, allowRules);
+  if (allowMatch && (allowMatch.type === MatchType.SCOPE || allowMatch.type === MatchType.PACKAGE)) {
+    // Entire scope or package is whitelisted
     return packageInfo;
   }
 
-  if (match.type === MatchType.SCOPE) {
-    return {
-      ...packageInfo,
-      versions: {},
-      readme: `All packages in scope ${match.scope} are blocked by rule`,
-    };
+  const blockMatch = matchRules(packageInfo, blockRules);
+  if (!blockMatch) {
+    // No rule is blocking this package
+    return packageInfo;
   }
 
-  if (match.type === MatchType.PACKAGE) {
-    return {
-      ...packageInfo,
-      versions: {},
-      readme: `All package versions are blocked by rule`,
-    };
+  const whitelistedVersions: string[] = allowMatch ? allowMatch.versions : [];
+  let blockRule: ParsedConfigRule = {
+    versions: [new Range('*')],
+    strategy: 'block',
+  };
+
+  if (blockMatch.type === MatchType.SCOPE) {
+    if (whitelistedVersions.length === 0) {
+      return {
+        ...packageInfo,
+        versions: {},
+        readme: `All packages in scope ${blockMatch.scope} are blocked by rule`,
+      };
+    }
+  } else if (blockMatch.type === MatchType.PACKAGE) {
+    if (whitelistedVersions.length === 0) {
+      return {
+        ...packageInfo,
+        versions: {},
+        readme: `All package versions are blocked by rule`,
+      };
+    }
+  } else {
+    blockRule = { ...blockRule, ...blockMatch.rule };
   }
 
-  const rule = match.rule;
-  const versionRanges = rule.versions;
+  const versionRanges = blockRule.versions;
   if (versionRanges.length === 0) {
+    // No version range specified. Nothing is blocked then.
     return packageInfo;
   }
 
-  if (!rule.strategy) {
-    rule.strategy = 'block';
-  }
+  if (blockRule.strategy === 'block') {
+    const blockedVersions = blockMatch.versions.filter((v) => !whitelistedVersions.includes(v));
+    for (const version of blockedVersions) {
+      delete packageInfo.versions[version];
+    }
 
-  if (rule.strategy === 'block') {
-    let blockedVersionsCount = 0;
-    Object.keys(packageInfo.versions).forEach((version) => {
-      versionRanges.forEach((versionRange) => {
-        if (
-          satisfies(version, versionRange, {
-            includePrerelease: true,
-            loose: true,
-          })
-        ) {
-          delete packageInfo.versions[version];
-          blockedVersionsCount++;
-        }
-      });
-    });
-
-    if (blockedVersionsCount > 0) {
+    if (blockedVersions.length > 0) {
       // Add debug info for devs
       packageInfo.readme =
         (packageInfo.readme || '') +
-        `\nSome versions(${blockedVersionsCount}) of package are blocked by rules: ${versionRanges.map(
+        `\nSome versions(${blockedVersions.length}) of package are blocked by rules: ${versionRanges.map(
           (range) => range.raw
         )}`;
     }
@@ -70,7 +78,8 @@ export function filterBlockedVersions(packageInfo: Package, rules: Map<string, P
     return packageInfo;
   }
 
-  // We assume that the order of versions is already sorted
+  // Process block rule strategy 'replace'.
+  // We assume that the order of versions is already sorted.
   const nonBlockedVersions = { ...packageInfo.versions };
   const newVersionsMapping: Record<string, string | null> = {};
 
@@ -82,6 +91,7 @@ export function filterBlockedVersions(packageInfo: Package, rules: Map<string, P
 
     allVersions.forEach((version) => {
       if (
+        !whitelistedVersions.includes(version) &&
         satisfies(version, versionRange, {
           includePrerelease: true,
           loose: true,
