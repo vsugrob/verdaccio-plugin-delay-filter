@@ -2,8 +2,8 @@
 import { IPluginStorageFilter, Logger, Package, PluginOptions } from '@verdaccio/types';
 import semver, { satisfies } from 'semver';
 
-import { parseBlockRules } from './config/parser';
-import { CustomConfig, ParsedAllowRule, ParsedBlockRule, ParsedConfig } from './config/types';
+import { parseConfigRules } from './config/parser';
+import { CustomConfig, ParsedConfig, ParsedRule } from './config/types';
 
 /**
  * Split a package name into name itself and scope
@@ -203,7 +203,7 @@ function filterVersionsByPublishDate(packageInfo: Package, dateThreshold: Date):
  * Filter out all blocked package versions.
  * If all package is blocked, or it's scope is blocked - block all versions.
  */
-function filterBlockedVersions(packageInfo: Package, block: Map<string, ParsedBlockRule>, logger: Logger): Package {
+function filterBlockedVersions(packageInfo: Package, block: Map<string, ParsedRule>, logger: Logger): Package {
   const { scope } = splitName(packageInfo.name);
 
   if (scope && block.get(scope) === 'scope') {
@@ -343,19 +343,15 @@ export default class VerdaccioMiddlewarePlugin implements IPluginStorageFilter<C
     this.config = config;
     this.logger = options.logger;
 
-    const blockMap = parseBlockRules(config.block ?? []);
-    const allowMap = new Map<string, ParsedAllowRule>();
-
+    const blockMap = parseConfigRules(config.block ?? []);
+    const allowMap = parseConfigRules(config.allow ?? []);
     const dateThreshold = config.dateThreshold ? new Date(config.dateThreshold) : null;
-
-    // eslint-disable-next-line no-prototype-builtins
     if (dateThreshold && isNaN(dateThreshold.getTime())) {
-      throw new TypeError(`Invalid date ${config.dateThreshold} were provided for dateThreshold`);
+      throw new TypeError(`Invalid date ${config.dateThreshold} was provided for dateThreshold`);
     }
 
     const minAgeDays = config.minAgeDays ? Number(config.minAgeDays) : null;
     let minAgeMs: number | null = null;
-    // eslint-disable-next-line no-prototype-builtins
     if (minAgeDays !== null) {
       if (isNaN(minAgeDays) || minAgeDays < 0) {
         throw new TypeError(`Invalid number ${config.minAgeDays} was provided for minAgeDays`);

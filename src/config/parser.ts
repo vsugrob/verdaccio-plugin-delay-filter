@@ -1,9 +1,9 @@
 import { Range } from 'semver';
 
-import { PackageBlockRule, ParsedBlockRule } from './types';
+import { ConfigRule, ParsedRule } from './types';
 
-export function parseBlockRules(configRules: PackageBlockRule[]): Map<string, ParsedBlockRule> {
-  const ruleMap = new Map<string, ParsedBlockRule>();
+export function parseConfigRules(configRules: ConfigRule[]): Map<string, ParsedRule> {
+  const ruleMap = new Map<string, ParsedRule>();
   for (const rule of configRules) {
     if ('scope' in rule && typeof rule.scope === 'string') {
       if (!rule.scope.startsWith('@')) {
