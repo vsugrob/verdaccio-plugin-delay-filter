@@ -5,6 +5,7 @@ import semver from 'semver';
 import { parseConfig } from './config/parser';
 import { CustomConfig, ParsedConfig } from './config/types';
 import { filterBlockedVersions } from './filtering/packageVersion';
+import { filterVersionsByPublishDate } from './filtering/publishDate';
 
 /**
  * Delete a tag if it maps to a removed version
@@ -144,41 +145,6 @@ function getPackageClone(packageInfo: Readonly<Package>): Package {
       ...packageInfo._distfiles,
     },
   };
-}
-
-/**
- * filter out all package versions that were published after dateThreshold
- * @param packageInfo
- * @param dateThreshold
- */
-function filterVersionsByPublishDate(packageInfo: Package, dateThreshold: Date): Promise<Package> {
-  const { versions, time, name } = packageInfo;
-
-  if (!time) {
-    throw new TypeError(`Time of publication was not provided for package ${name}`);
-  }
-
-  const clearVersions: string[] = [];
-
-  Object.keys(versions).forEach((version) => {
-    const publishTime = time[version];
-
-    if (!publishTime) {
-      throw new TypeError(`Time of publication was not provided for package ${name}, version ${version}`);
-    }
-
-    if (new Date(publishTime) > dateThreshold) {
-      // clear untrusted version
-      clearVersions.push(version);
-    }
-  });
-
-  // delete version from versions
-  clearVersions.forEach((version) => {
-    delete packageInfo.versions[version];
-  });
-
-  return Promise.resolve(packageInfo);
 }
 
 export default class VerdaccioMiddlewarePlugin implements IPluginStorageFilter<CustomConfig> {
