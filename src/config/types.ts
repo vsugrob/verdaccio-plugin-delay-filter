@@ -13,8 +13,8 @@ export type PackageAllowRule = { scope: string } | { package: string } | { packa
 export interface CustomConfig extends Config {
   dateThreshold?: string | number;
   minAgeDays?: number;
-  block?: Array<PackageBlockRule>;
-  allow?: Array<PackageAllowRule>;
+  block?: PackageBlockRule[];
+  allow?: PackageAllowRule[];
 }
 
 interface ParsedBlockConfig {

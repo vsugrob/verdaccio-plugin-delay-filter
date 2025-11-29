@@ -1,15 +1,9 @@
 /* eslint-disable new-cap */
 import { IPluginStorageFilter, Logger, Package, PluginOptions } from '@verdaccio/types';
-import semver, { Range, satisfies } from 'semver';
+import semver, { satisfies } from 'semver';
 
-import {
-  BlockStrategy,
-  CustomConfig,
-  PackageBlockRule,
-  ParsedAllowRule,
-  ParsedBlockRule,
-  ParsedConfig,
-} from './config/types';
+import { parseBlockRules } from './config/parser';
+import { CustomConfig, ParsedAllowRule, ParsedBlockRule, ParsedConfig } from './config/types';
 
 /**
  * Split a package name into name itself and scope
@@ -205,23 +199,6 @@ function filterVersionsByPublishDate(packageInfo: Package, dateThreshold: Date):
   return Promise.resolve(packageInfo);
 }
 
-function isScopeRule(rule: PackageBlockRule): rule is { scope: string } {
-  // eslint-disable-next-line no-prototype-builtins
-  return 'scope' in rule && typeof rule.scope === 'string';
-}
-
-function isPackageRule(rule: PackageBlockRule): rule is { package: string; versions: never } {
-  // eslint-disable-next-line no-prototype-builtins
-  return 'package' in rule && !('versions' in rule);
-}
-
-function isPackageAndVersionRule(
-  rule: PackageBlockRule
-): rule is { package: string; versions: string; strategy?: BlockStrategy } {
-  // eslint-disable-next-line no-prototype-builtins
-  return 'package' in rule && 'versions' in rule;
-}
-
 /**
  * Filter out all blocked package versions.
  * If all package is blocked, or it's scope is blocked - block all versions.
@@ -366,43 +343,8 @@ export default class VerdaccioMiddlewarePlugin implements IPluginStorageFilter<C
     this.config = config;
     this.logger = options.logger;
 
-    const blockMap = new Map<string, ParsedBlockRule>();
+    const blockMap = parseBlockRules(config.block ?? []);
     const allowMap = new Map<string, ParsedAllowRule>();
-    const blockCfg = config.block ?? [];
-    for (const value of blockCfg) {
-      if (isScopeRule(value)) {
-        if (!value.scope.startsWith('@')) {
-          throw new TypeError(`Scope value must start with @, found: ${value.scope}`);
-        }
-
-        blockMap.set(value.scope, 'scope');
-        continue;
-      }
-
-      if (isPackageRule(value)) {
-        blockMap.set(value.package, 'package');
-        continue;
-      }
-
-      if (isPackageAndVersionRule(value)) {
-        const previousConfig = blockMap.get(value.package) || { versions: [] };
-
-        if (typeof previousConfig === 'string') {
-          throw new Error(`Package ${value.package} is already specified by another strict rule ${previousConfig}`);
-        }
-
-        // Merge version ranges of the rules for the same package
-        const range = new Range(value.versions);
-        blockMap.set(value.package, {
-          versions: [...previousConfig.versions, range],
-          strategy: value.strategy ?? 'block',
-        });
-
-        continue;
-      }
-
-      throw new TypeError(`Could not parse rule ${JSON.stringify(value, null, 4)}`);
-    }
 
     const dateThreshold = config.dateThreshold ? new Date(config.dateThreshold) : null;
 
