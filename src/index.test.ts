@@ -561,6 +561,59 @@ describe('VerdaccioMiddlewarePlugin', () => {
         expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
       });
     });
+
+    describe('replace by version', () => {
+      test('allow by scope', async function() {
+        const config = {
+          block: [
+            { package: '@babel/test', versions: '>1.0.0', strategy: 'replace' },
+            { package: '@types/node', versions: '>1.0.0', strategy: 'replace' },
+          ],
+          allow: [{ scope: '@babel' }],
+        } as CustomConfig; // Some properties are omitted on purpose
+        const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
+
+        // Should not replace versions of @babel
+        expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
+
+        // Should replace version of @types/node to 1.0.0
+        expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
+      });
+
+      test('allow by package', async function() {
+        const config = {
+          block: [
+            { package: '@babel/test', versions: '>1.0.0', strategy: 'replace' },
+            { package: '@types/node', versions: '>1.0.0', strategy: 'replace' },
+          ],
+          allow: [{ package: '@babel/test' }],
+        } as CustomConfig; // Some properties are omitted on purpose
+        const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
+
+        // Should not replace versions of @babel/test
+        expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
+
+        // Should replace version of @types/node to 1.0.0
+        expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
+      });
+
+      test('allow by version', async function() {
+        const config = {
+          block: [
+            { package: '@babel/test', versions: '>1.0.0', strategy: 'replace' },
+            { package: '@types/node', versions: '>1.0.0', strategy: 'replace' },
+          ],
+          allow: [{ package: '@babel/test', versions: '3.0.0' }],
+        } as CustomConfig; // Some properties are omitted on purpose
+        const plugin = new VerdaccioMiddlewarePlugin(config, { logger, config });
+
+        // Should only replace version 2.0.0 of @babel/test
+        expect(await plugin.filter_metadata(babelTestPackage)).toMatchSnapshot();
+
+        // Should replace version of @types/node to 1.0.0
+        expect(await plugin.filter_metadata(typesNodePackage)).toMatchSnapshot();
+      });
+    });
   });
 
   describe('manifest cleanup', () => {

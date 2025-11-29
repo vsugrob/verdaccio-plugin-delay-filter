@@ -48,4 +48,5 @@
   - ✅ Mention where to configure "filters:" (config.yaml verdaccio).
   - ✅ Remove deprecation from `dateThreshold` parameter. It's not that useless actually.
 - ✅ Do not compile index.test.ts into lib/index.test.js. It should not end up in distrubution files.
+- ✅ Implement whitelisting packages by scope, package and/or versions.
 - 🔴 Fix vulnerabilities revealed by npm audit: 39 vulnerabilities (7 low, 18 moderate, 14 high).
