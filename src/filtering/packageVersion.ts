@@ -3,56 +3,36 @@ import { satisfies } from 'semver';
 
 import { ParsedRule } from '../config/types';
 
-/**
- * Split a package name into name itself and scope
- * @param name
- */
-function splitName(name: string): { name: string; scope?: string } {
-  const parts = name.split('/');
-
-  if (parts.length > 1) {
-    return {
-      scope: parts[0],
-      name: parts[1],
-    };
-  } else {
-    return {
-      name: parts[0],
-    };
-  }
-}
+import { matchRules } from './matcher';
+import { MatchType } from './types';
 
 /**
  * Filter out all blocked package versions.
  * If all package is blocked, or it's scope is blocked - block all versions.
  */
 export function filterBlockedVersions(packageInfo: Package, rules: Map<string, ParsedRule>, logger: Logger): Package {
-  const { scope } = splitName(packageInfo.name);
-  if (scope && rules.get(scope) === 'scope') {
-    return {
-      ...packageInfo,
-      versions: {},
-      readme: `All packages in scope ${scope} blocked by rule`,
-    };
-  }
-
-  const rule = rules.get(packageInfo.name);
-  if (!rule) {
+  const match = matchRules(packageInfo, rules);
+  if (!match) {
     return packageInfo;
   }
 
-  if (rule === 'package') {
+  if (match.type === MatchType.SCOPE) {
     return {
       ...packageInfo,
       versions: {},
-      readme: `All package versions blocked by rule`,
+      readme: `All packages in scope ${match.scope} are blocked by rule`,
     };
   }
 
-  if (rule === 'scope') {
-    throw new Error('Unexpected case - rule for package should never be "scope"');
+  if (match.type === MatchType.PACKAGE) {
+    return {
+      ...packageInfo,
+      versions: {},
+      readme: `All package versions are blocked by rule`,
+    };
   }
 
+  const rule = match.rule;
   const versionRanges = rule.versions;
   if (versionRanges.length === 0) {
     return packageInfo;

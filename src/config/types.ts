@@ -15,7 +15,7 @@ export interface CustomConfig extends Config {
   allow?: ConfigRule[];
 }
 
-interface ParsedConfigRule {
+export interface ParsedConfigRule {
   versions: Range[];
   strategy?: BlockStrategy;
 }
