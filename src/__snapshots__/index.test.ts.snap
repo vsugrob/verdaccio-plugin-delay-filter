@@ -1587,3 +1587,162 @@ Object {
   },
 }
 `;
+
+exports[`VerdaccioMiddlewarePlugin whitelist block by scope allow by package 1`] = `
+Object {
+  "_attachments": Object {},
+  "_distfiles": Object {},
+  "_rev": "",
+  "_uplinks": Object {},
+  "dist-tags": Object {
+    "latest": "3.0.0",
+  },
+  "name": "@babel/test",
+  "readme": "It is a babel test package",
+  "time": Object {
+    "1.0.0": "2020-01-01T00:00:00.000Z",
+    "1.5.0": "2022-01-01T00:00:00.000Z",
+    "3.0.0": "2024-01-01T00:00:00.000Z",
+    "created": "2020-01-01T00:00:00.000Z",
+    "modified": "2024-01-01T00:00:00.000Z",
+  },
+  "versions": Object {
+    "1.0.0": Object {
+      "_id": "@babel/test@1.0.0",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+    "1.5.0": Object {
+      "_id": "@babel/test@1.5.0",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+    "3.0.0": Object {
+      "_id": "@babel/test@3.0.0",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+  },
+}
+`;
+
+exports[`VerdaccioMiddlewarePlugin whitelist block by scope allow by package 2`] = `
+Object {
+  "_attachments": Object {},
+  "_distfiles": Object {},
+  "_rev": "",
+  "_uplinks": Object {},
+  "dist-tags": Object {},
+  "name": "@types/node",
+  "readme": "All packages in scope @types are blocked by rule",
+  "time": Object {},
+  "versions": Object {},
+}
+`;
+
+exports[`VerdaccioMiddlewarePlugin whitelist block by scope allow by scope 1`] = `
+Object {
+  "_attachments": Object {},
+  "_distfiles": Object {},
+  "_rev": "",
+  "_uplinks": Object {},
+  "dist-tags": Object {
+    "latest": "3.0.0",
+  },
+  "name": "@babel/test",
+  "readme": "It is a babel test package",
+  "time": Object {
+    "1.0.0": "2020-01-01T00:00:00.000Z",
+    "1.5.0": "2022-01-01T00:00:00.000Z",
+    "3.0.0": "2024-01-01T00:00:00.000Z",
+    "created": "2020-01-01T00:00:00.000Z",
+    "modified": "2024-01-01T00:00:00.000Z",
+  },
+  "versions": Object {
+    "1.0.0": Object {
+      "_id": "@babel/test@1.0.0",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+    "1.5.0": Object {
+      "_id": "@babel/test@1.5.0",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+    "3.0.0": Object {
+      "_id": "@babel/test@3.0.0",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+  },
+}
+`;
+
+exports[`VerdaccioMiddlewarePlugin whitelist block by scope allow by scope 2`] = `
+Object {
+  "_attachments": Object {},
+  "_distfiles": Object {},
+  "_rev": "",
+  "_uplinks": Object {},
+  "dist-tags": Object {},
+  "name": "@types/node",
+  "readme": "All packages in scope @types are blocked by rule",
+  "time": Object {},
+  "versions": Object {},
+}
+`;
+
+exports[`VerdaccioMiddlewarePlugin whitelist block by scope allow by version 1`] = `
+Object {
+  "_attachments": Object {},
+  "_distfiles": Object {},
+  "_rev": "",
+  "_uplinks": Object {},
+  "dist-tags": Object {
+    "latest": "3.0.0",
+  },
+  "name": "@babel/test",
+  "readme": "It is a babel test package
+Some versions(2) of package are blocked by rules: *",
+  "time": Object {
+    "3.0.0": "2024-01-01T00:00:00.000Z",
+    "created": "2024-01-01T00:00:00.000Z",
+    "modified": "2024-01-01T00:00:00.000Z",
+  },
+  "versions": Object {
+    "3.0.0": Object {
+      "_id": "@babel/test@3.0.0",
+      "main": "",
+      "name": "",
+      "readme": "",
+      "version": "",
+    },
+  },
+}
+`;
+
+exports[`VerdaccioMiddlewarePlugin whitelist block by scope allow by version 2`] = `
+Object {
+  "_attachments": Object {},
+  "_distfiles": Object {},
+  "_rev": "",
+  "_uplinks": Object {},
+  "dist-tags": Object {},
+  "name": "@types/node",
+  "readme": "All packages in scope @types are blocked by rule",
+  "time": Object {},
+  "versions": Object {},
+}
+`;
