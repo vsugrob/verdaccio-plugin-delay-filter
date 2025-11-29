@@ -1,8 +1,8 @@
 /* eslint-disable new-cap */
-import { IPluginStorageFilter, Package, PluginOptions, Logger } from '@verdaccio/types';
+import { IPluginStorageFilter, Logger, Package, PluginOptions } from '@verdaccio/types';
 import semver, { Range, satisfies } from 'semver';
 
-import { BlockStrategy, CustomConfig, PackageBlockRule, ParsedBlockRule } from './types';
+import { BlockStrategy, CustomConfig, PackageBlockRule, ParsedBlockRule, ParsedConfig } from './types';
 
 /**
  * Split a package name into name itself and scope
@@ -352,59 +352,48 @@ function filterBlockedVersions(packageInfo: Package, block: Map<string, ParsedBl
 
 export default class VerdaccioMiddlewarePlugin implements IPluginStorageFilter<CustomConfig> {
   private readonly config: CustomConfig;
-  private readonly parsedConfig: {
-    dateThreshold: Date | null;
-    minAgeMs: number | null;
-    block: Map<string, ParsedBlockRule>;
-  };
+  private readonly parsedConfig: ParsedConfig;
   protected readonly logger: PluginOptions<unknown>['logger'];
 
   public constructor(config: CustomConfig, options: PluginOptions<CustomConfig>) {
     this.config = config;
     this.logger = options.logger;
 
-    const blockMap = (config.block ?? []).reduce((map, value) => {
-      // eslint-disable-next-line no-prototype-builtins
+    const blockMap = new Map<string, ParsedBlockRule>();
+    const blockCfg = config.block ?? [];
+    for (const value of blockCfg) {
       if (isScopeRule(value)) {
         if (!value.scope.startsWith('@')) {
           throw new TypeError(`Scope value must start with @, found: ${value.scope}`);
         }
 
-        map.set(value.scope, 'scope');
-        return map;
+        blockMap.set(value.scope, 'scope');
+        continue;
       }
 
       if (isPackageRule(value)) {
-        map.set(value.package, 'package');
-        return map;
+        blockMap.set(value.package, 'package');
+        continue;
       }
 
       if (isPackageAndVersionRule(value)) {
-        const previousConfig = map.get(value.package) || { block: [] };
+        const previousConfig = blockMap.get(value.package) || { block: [] };
 
         if (typeof previousConfig === 'string') {
-          return map; // use more strict rule
+          throw new Error(`Package ${value.package} is already blocked by strict rule ${previousConfig}`);
         }
 
-        try {
-          const range = new Range(value.versions);
+        const range = new Range(value.versions);
+        blockMap.set(value.package, {
+          block: [...previousConfig.block, range],
+          strategy: value.strategy ?? 'block',
+        });
 
-          map.set(value.package, {
-            block: [...previousConfig.block, range],
-            strategy: value.strategy ?? 'block',
-          });
-        } catch (e) {
-          options.logger.error('Error parsing rule failed:');
-          options.logger.error(e);
-          options.logger.error('encountered while parsing rule:');
-          options.logger.error(value);
-        }
-
-        return map;
+        continue;
       }
 
-      throw new TypeError(`Could not parse rule ${JSON.stringify(value, null, 4)} in skipChecksFor`);
-    }, new Map<string, ParsedBlockRule>());
+      throw new TypeError(`Could not parse rule ${JSON.stringify(value, null, 4)}`);
+    }
 
     const dateThreshold = config.dateThreshold ? new Date(config.dateThreshold) : null;
 

@@ -12,6 +12,12 @@ export interface CustomConfig extends Config {
   block?: Array<PackageBlockRule>;
 }
 
+export interface ParsedConfig {
+  dateThreshold: Date | null;
+  minAgeMs: number | null;
+  block: Map<string, ParsedBlockRule>;
+}
+
 export type ParsedBlockKind = 'scope' | 'package' | undefined;
 
 export type BlockStrategy = 'block' | 'replace';
