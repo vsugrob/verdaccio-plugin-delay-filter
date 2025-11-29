@@ -341,7 +341,7 @@ describe('VerdaccioMiddlewarePlugin', () => {
 
       // Should block '1.7.0' version of @testaccio/test
       // Should behave as if _distfiles were set to an empty object
-      let packageWithNoDistFiles = { ...testaccioPackage } as { [key: string]: unknown };
+      const packageWithNoDistFiles = { ...testaccioPackage } as { [key: string]: unknown };
       delete packageWithNoDistFiles._distfiles;
 
       // '_distfiles' may or may not be present in the package manifest,

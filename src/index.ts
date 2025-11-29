@@ -51,6 +51,29 @@ function cleanupTime(packageInfo: Package): void {
   });
 }
 
+function getLatestVersion(packageInfo: Package, versions: string[]): string | undefined {
+  const time = packageInfo.time;
+  if (!time) {
+    // No time information, it's the best we can do
+    const sortedVersions = versions.sort(semver.rcompare);
+    return sortedVersions[0];
+  }
+
+  const timedVersions = versions
+    .map((v) => ({
+      version: v,
+      time: time[v],
+    }))
+    .filter((v) => v.time);
+
+  if (timedVersions.length === 0) {
+    return undefined;
+  }
+
+  const timeOrderedVersions = timedVersions.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
+  return timeOrderedVersions[0].version;
+}
+
 /**
  * Set the latest tag if dist-tags/latest is missing
  */
@@ -88,29 +111,6 @@ function setupLatestTag(packageInfo: Package): void {
   distTags.latest = latestVersion;
 }
 
-function getLatestVersion(packageInfo: Package, versions: string[]): string | undefined {
-  const time = packageInfo.time;
-  if (!time) {
-    // No time information, it's the best we can do
-    const sortedVersions = versions.sort(semver.rcompare);
-    return sortedVersions[0];
-  }
-
-  const timedVersions = versions
-    .map((v) => ({
-      version: v,
-      time: time[v],
-    }))
-    .filter((v) => v.time);
-
-  if (timedVersions.length === 0) {
-    return undefined;
-  }
-
-  const timeOrderedVersions = timedVersions.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
-  return timeOrderedVersions[0].version;
-}
-
 /**
  * Set the created and modified times
  */
@@ -133,7 +133,7 @@ function setupCreatedAndModified(packageInfo: Package): void {
 /**
  * Remove distfiles that are not used by any version
  */
-function cleanupDistFiles(newPackage: Package) {
+function cleanupDistFiles(newPackage: Package): void {
   const distFiles = newPackage._distfiles;
   Object.entries(distFiles).forEach(([key, file]) => {
     const fileUrl = file.url;
