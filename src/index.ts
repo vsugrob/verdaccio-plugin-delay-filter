@@ -1,28 +1,10 @@
 /* eslint-disable new-cap */
-import { IPluginStorageFilter, Logger, Package, PluginOptions } from '@verdaccio/types';
-import semver, { satisfies } from 'semver';
+import { IPluginStorageFilter, Package, PluginOptions } from '@verdaccio/types';
+import semver from 'semver';
 
 import { parseConfig } from './config/parser';
-import { CustomConfig, ParsedConfig, ParsedRule } from './config/types';
-
-/**
- * Split a package name into name itself and scope
- * @param name
- */
-function splitName(name: string): { name: string; scope?: string } {
-  const parts = name.split('/');
-
-  if (parts.length > 1) {
-    return {
-      scope: parts[0],
-      name: parts[1],
-    };
-  } else {
-    return {
-      name: parts[0],
-    };
-  }
-}
+import { CustomConfig, ParsedConfig } from './config/types';
+import { filterBlockedVersions } from './filtering/packageVersion';
 
 /**
  * Delete a tag if it maps to a removed version
@@ -197,141 +179,6 @@ function filterVersionsByPublishDate(packageInfo: Package, dateThreshold: Date):
   });
 
   return Promise.resolve(packageInfo);
-}
-
-/**
- * Filter out all blocked package versions.
- * If all package is blocked, or it's scope is blocked - block all versions.
- */
-function filterBlockedVersions(packageInfo: Package, block: Map<string, ParsedRule>, logger: Logger): Package {
-  const { scope } = splitName(packageInfo.name);
-
-  if (scope && block.get(scope) === 'scope') {
-    return {
-      ...packageInfo,
-      versions: {},
-      readme: `All packages in scope ${scope} blocked by rule`,
-    };
-  }
-
-  const blockRule = block.get(packageInfo.name);
-
-  if (!blockRule) {
-    return packageInfo;
-  }
-
-  if (blockRule === 'package') {
-    return {
-      ...packageInfo,
-      versions: {},
-      readme: `All package versions blocked by rule`,
-    };
-  }
-
-  if (blockRule === 'scope') {
-    throw new Error('Unexpected case - blockRule for package should never be "scope"');
-  }
-
-  const blockedVersionRanges = blockRule.versions;
-  if (blockedVersionRanges.length === 0) {
-    return packageInfo;
-  }
-
-  if (!blockRule.strategy) {
-    blockRule.strategy = 'block';
-  }
-
-  if (blockRule.strategy === 'block') {
-    let blockedVersionsCount = 0;
-    Object.keys(packageInfo.versions).forEach((version) => {
-      blockedVersionRanges.forEach((versionRange) => {
-        if (
-          satisfies(version, versionRange, {
-            includePrerelease: true,
-            loose: true,
-          })
-        ) {
-          delete packageInfo.versions[version];
-          blockedVersionsCount++;
-        }
-      });
-    });
-
-    if (blockedVersionsCount > 0) {
-      // Add debug info for devs
-      packageInfo.readme =
-        (packageInfo.readme || '') +
-        `\nSome versions(${blockedVersionsCount}) of package are blocked by rules: ${blockedVersionRanges.map(
-          (range) => range.raw
-        )}`;
-    }
-
-    return packageInfo;
-  }
-
-  // We assume that the order of versions is already sorted
-  const nonBlockedVersions = { ...packageInfo.versions };
-  const newVersionsMapping: Record<string, string | null> = {};
-
-  blockedVersionRanges.forEach((versionRange) => {
-    const allVersions = Object.keys(nonBlockedVersions);
-
-    let lastNonBlockedVersion: string | null = null;
-    let firstNonBlockedVersion: string | null = null;
-
-    allVersions.forEach((version) => {
-      if (
-        satisfies(version, versionRange, {
-          includePrerelease: true,
-          loose: true,
-        })
-      ) {
-        delete nonBlockedVersions[version];
-        newVersionsMapping[version] = lastNonBlockedVersion;
-      } else {
-        lastNonBlockedVersion = version;
-        firstNonBlockedVersion = firstNonBlockedVersion ?? version;
-      }
-    });
-  });
-
-  logger.debug(`Filtering package ${packageInfo.name}, replacing versions`);
-  logger.debug(`${JSON.stringify(newVersionsMapping)}`);
-
-  const removedVersions = Object.entries(newVersionsMapping).filter(([_, replace]) => replace === null) as [
-    string,
-    null
-  ][];
-  const replacedVersions = Object.entries(newVersionsMapping).filter(([_, replace]) => replace !== null) as [
-    string,
-    string
-  ][];
-
-  removedVersions.forEach(([version]) => {
-    logger.debug(`No version to replace ${version}`);
-    delete packageInfo.versions[version];
-  });
-
-  replacedVersions.forEach(([version, replaceVersion]) => {
-    packageInfo.versions[version] = {
-      ...packageInfo.versions[replaceVersion],
-      version,
-    };
-  });
-
-  if (removedVersions.length > 0) {
-    packageInfo.readme +=
-      `\nSome versions of package could not be replaced and thus are fully blocked (${removedVersions.length}):` +
-      ` ${removedVersions.map((a) => a[0])}`;
-  }
-
-  if (replacedVersions.length > 0) {
-    packageInfo.readme +=
-      `\nSome versions of package are replaced by other(${replacedVersions.length}):` +
-      ` ${replacedVersions.map((a) => `${a[0]} => ${a[1]}`)}`;
-  }
-
-  return packageInfo;
 }
 
 export default class VerdaccioMiddlewarePlugin implements IPluginStorageFilter<CustomConfig> {
