@@ -18,7 +18,7 @@ export function filterBlockedVersions(
 ): Package {
   const allowMatch = matchRules(packageInfo, allowRules);
   if (allowMatch && (allowMatch.type === MatchType.SCOPE || allowMatch.type === MatchType.PACKAGE)) {
-    // Entire scope or package is whitelisted
+    // An entire scope or package is whitelisted
     return packageInfo;
   }
 

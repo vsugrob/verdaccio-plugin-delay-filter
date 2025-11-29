@@ -26,6 +26,6 @@ export type ParsedRule = ParsedConfigRule | PackageScopeLevel;
 export interface ParsedConfig {
   dateThreshold: Date | null;
   minAgeMs: number | null;
-  block: Map<string, ParsedRule>;
-  allow: Map<string, ParsedRule>;
+  blockRules: Map<string, ParsedRule>;
+  allowRules: Map<string, ParsedRule>;
 }

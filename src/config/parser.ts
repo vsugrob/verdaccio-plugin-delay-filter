@@ -64,7 +64,7 @@ export function parseConfig(config: CustomConfig): ParsedConfig {
     ...config,
     dateThreshold,
     minAgeMs,
-    block: blockMap,
-    allow: allowMap,
+    blockRules: blockMap,
+    allowRules: allowMap,
   };
 }

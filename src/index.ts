@@ -159,17 +159,17 @@ export default class VerdaccioMiddlewarePlugin implements IPluginStorageFilter<C
 
     options.logger.debug(
       `Loaded plugin-delay-filter, ${JSON.stringify(this.parsedConfig, null, 4)}, ${Array.from(
-        this.parsedConfig.block.entries()
+        this.parsedConfig.blockRules.entries()
       )}`
     );
   }
 
   public async filter_metadata(packageInfo: Readonly<Package>): Promise<Package> {
-    const { dateThreshold, minAgeMs, block, allow } = this.parsedConfig;
+    const { dateThreshold, minAgeMs, blockRules, allowRules } = this.parsedConfig;
 
     let newPackage = getPackageClone(packageInfo);
-    if (block.size > 0) {
-      newPackage = filterBlockedVersions(newPackage, block, allow, this.logger);
+    if (blockRules.size > 0) {
+      newPackage = filterBlockedVersions(newPackage, blockRules, allowRules, this.logger);
     }
 
     let earliestDateThreshold: Date | null = null;
@@ -182,7 +182,7 @@ export default class VerdaccioMiddlewarePlugin implements IPluginStorageFilter<C
     }
 
     if (earliestDateThreshold) {
-      newPackage = await filterVersionsByPublishDate(newPackage, earliestDateThreshold);
+      newPackage = filterVersionsByPublishDate(newPackage, earliestDateThreshold, allowRules);
     }
 
     cleanupTags(newPackage);
