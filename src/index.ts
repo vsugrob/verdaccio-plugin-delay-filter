@@ -2,7 +2,7 @@
 import { IPluginStorageFilter, Logger, Package, PluginOptions } from '@verdaccio/types';
 import semver, { Range, satisfies } from 'semver';
 
-import { BlockStrategy, CustomConfig, PackageBlockRule, ParsedBlockRule, ParsedConfig } from './types';
+import { BlockStrategy, CustomConfig, PackageBlockRule, ParsedAllowRule, ParsedBlockRule, ParsedConfig } from './types';
 
 /**
  * Split a package name into name itself and scope
@@ -248,7 +248,7 @@ function filterBlockedVersions(packageInfo: Package, block: Map<string, ParsedBl
     throw new Error('Unexpected case - blockRule for package should never be "scope"');
   }
 
-  const blockedVersionRanges = blockRule.block;
+  const blockedVersionRanges = blockRule.versions;
   if (blockedVersionRanges.length === 0) {
     return packageInfo;
   }
@@ -360,6 +360,7 @@ export default class VerdaccioMiddlewarePlugin implements IPluginStorageFilter<C
     this.logger = options.logger;
 
     const blockMap = new Map<string, ParsedBlockRule>();
+    const allowMap = new Map<string, ParsedAllowRule>();
     const blockCfg = config.block ?? [];
     for (const value of blockCfg) {
       if (isScopeRule(value)) {
@@ -377,15 +378,16 @@ export default class VerdaccioMiddlewarePlugin implements IPluginStorageFilter<C
       }
 
       if (isPackageAndVersionRule(value)) {
-        const previousConfig = blockMap.get(value.package) || { block: [] };
+        const previousConfig = blockMap.get(value.package) || { versions: [] };
 
         if (typeof previousConfig === 'string') {
-          throw new Error(`Package ${value.package} is already blocked by strict rule ${previousConfig}`);
+          throw new Error(`Package ${value.package} is already specified by another strict rule ${previousConfig}`);
         }
 
+        // Merge version ranges of the rules for the same package
         const range = new Range(value.versions);
         blockMap.set(value.package, {
-          block: [...previousConfig.block, range],
+          versions: [...previousConfig.versions, range],
           strategy: value.strategy ?? 'block',
         });
 
@@ -418,6 +420,7 @@ export default class VerdaccioMiddlewarePlugin implements IPluginStorageFilter<C
       dateThreshold,
       minAgeMs,
       block: blockMap,
+      allow: allowMap,
     };
 
     options.logger.debug(
